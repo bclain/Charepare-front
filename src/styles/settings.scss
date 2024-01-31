@@ -302,22 +302,22 @@ section, .section{
 
 .btn-base {
   border: none;
-  background-color: transparent;
+  background-color: $white;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 5px;
   border: transparent .5px solid;
+  box-shadow: 2px 3px #7D0404;
   border-radius: 0px;
-  padding: 2px;
+  padding: 3px;
   transition: 150ms ease-in-out;
-  border-radius: 5px;
   height: fit-content;
 
   p {
-    color: $color-1;
-    font-weight: 600;
-    font-family: "Inter", sans-serif; 
+    color: $dark;
+    font-weight: 1000;
+    font-family: $font-2; 
   }
 
   &.danger {
@@ -339,22 +339,22 @@ section, .section{
 }
 
 .btn-simple {
-  border-radius: 9px;
-  background: $color-1;
+  border: none;
+  background-color: transparent;
   display: flex;
-  padding: 5px 15px;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
+  border: transparent .5px solid;
+  border-radius: 0px;
+  padding: 3px;
+  transition: 150ms ease-in-out;
+  height: fit-content;
 
   p {
-    color: white;
-    font-weight: 500;
-    font-size: 16px;
-  }
-
-  &:hover {
-    background: $dark;
+    color: $white;
+    font-weight: 1000;
+    font-family: $font-1; 
   }
 }
 

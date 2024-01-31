@@ -1,0 +1,402 @@
+.calendrier {
+    width: 100%;
+    height: 100%;
+    flex: 1 1 ;
+    display: flex;
+    flex-direction: row;
+    margin: 15px 0px 0px;
+    padding: 0px 15px;
+    border-radius: 15px;
+    background: white;
+    position: relative;
+    overflow: scroll;
+
+    .colonne {
+        display: flex;
+    }
+
+    .arret{
+        background-color: $color-alert-dark;
+    }
+
+
+    .entete {
+        height: fit-content;
+        padding: 5px;
+        display: grid;
+        justify-content: center;
+        background-color: $white;
+        align-self: start;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        p {
+            font-size: 12px;
+            white-space: nowrap;
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    .heure {
+        // border-bottom: $grey-selection .5px solid;
+        min-height: 80px;
+        display: grid;
+        background-color: white;
+
+        .quartn {
+            &:hover {
+                background-color: $color-2;
+                cursor: pointer;
+            }
+
+            &:not(.disp) {
+                background-color: $grey-coloured;
+                cursor: initial;
+            }
+        }
+
+    }
+
+    &.disposdisp {
+        .heure {
+
+            .quartn,
+            .quart {
+                &.disp {
+                    background-color: $color-2;
+                    cursor: initial;
+                }
+            }
+
+            .case-rdv {
+                display: none;
+            }
+        }
+    }
+
+    .heure.des {
+        text-align: center;
+        background-color: white;
+        border-radius: 0px;
+    }
+
+    .heures {
+        height: fit-content;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        width: 50px;
+        min-width: 14.2%;
+        min-width: 55px;
+        min-height: 100%;
+        overflow: hidden;
+
+        .contentj {
+            display: grid;
+            background-color: $grey-back;
+
+            border-top: white 0.5px solid;
+            border-radius: 9px;
+            gap: 2px;
+        }
+
+        .entete {
+            border-left: transparent .5px solid;
+
+        }
+    }
+
+    .jour {
+        grid-template-rows: auto 1fr;
+        display: grid;
+        min-width: 14.2%;
+        width: 100%;
+        min-height: 100%;
+        height: fit-content;
+
+        min-width: 55px;
+        overflow: visible;
+        border-radius: 10px;
+
+        .contentj {
+            display: grid;
+            background-color: $grey-strong;
+            border: $grey-selection .5px solid;
+            border-radius: 9px;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        &.today {    
+            .contentj {
+
+                border:$color-1 1px solid;
+            }
+            .heure {
+                background: white;
+            }
+
+            .entete {
+                
+                p {
+                    color: $color-1;
+                }
+            }
+        }
+
+        .heure {
+            background: $grey-light;
+        }
+
+        .rdv {
+            background-color: $grey-back;
+            position: relative;
+
+            .case-rdv  {
+                width: 100%;
+                position: absolute;
+                z-index: 10;
+                top: 0;
+                padding: 0px;
+
+                a {
+                    color: black;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    border: $color-2 5px solid;
+                    ;
+                    border-radius: 5px;
+                    justify-content: start;
+                    align-items: center;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    p {
+                        width: 100%;
+                        text-align: center;
+                        padding: 5px;
+                    }
+
+                    &:hover {
+                        background-color: $color-1;
+                        color: white;
+                    }
+
+                }
+
+            }
+            
+            &.active{
+                .case-rdv{
+
+                    a{
+                        background-color: $color-1;
+                        color: white;
+                    }
+                }
+
+            }
+            .case-arret{
+                width: 100%;
+                position: absolute;
+                z-index: 10;
+                top: 0;
+                padding: 1.5px;
+
+                a {
+                    color: black;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    border: $grey-border 2px solid;
+                    ;
+                    border-radius: 9px;
+                    justify-content: start;
+                    align-items: center;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+
+                    background-color: $grey-coloured;
+                    p {
+                        width: 100%;
+                        text-align: center;
+                        padding: 5px;
+                    }
+
+                    &:hover {
+                        
+                        background-color:white;
+                        color: $color-alert;
+                    }
+
+                }
+            }
+
+            &.confirme {
+                a {
+                    border: $color-alert 5px solid;
+
+                    &:hover{
+                        background-color: $color-alert;
+                        color: white;
+                    }
+                }
+                &.active{
+                    a{
+
+                        background-color: $color-alert;
+                        color: white;
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
+
+
+.react-datepicker {
+    font-family: inherit;
+    font-size: 0.8rem;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #aeaeae;
+    border-radius: 15px;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    align-self: center;
+
+    .react-datepicker__month-container {
+        width: 100%;
+    }
+
+    .react-datepicker__day-names {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.4rem;
+        text-align: center;
+    }
+
+    .react-datepicker__week {
+        white-space: nowrap;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+  
+.react-datepicker__header {
+        background-color: $grey-back;
+    }
+
+    .react-datepicker__day {
+        border-radius: 50px;
+    }
+
+    .react-datepicker__header:not(.react-datepicker__header--has-time-select) {
+        border-top-right-radius: 15px;
+    }
+
+    .react-datepicker__day--selected,
+    .react-datepicker__day--in-selecting-range,
+    .react-datepicker__day--in-range,
+    .react-datepicker__month-text--selected,
+    .react-datepicker__month-text--in-selecting-range,
+    .react-datepicker__month-text--in-range,
+    .react-datepicker__quarter-text--selected,
+    .react-datepicker__quarter-text--in-selecting-range,
+    .react-datepicker__quarter-text--in-range,
+    .react-datepicker__year-text--selected,
+    .react-datepicker__year-text--in-selecting-range,
+    .react-datepicker__year-text--in-range {
+        border-radius: 0.3rem;
+        background-color: $color-1;
+        border-radius: 50px;
+        color: #fff;
+    }
+
+    .react-datepicker__day--keyboard-selected,
+    .react-datepicker__month-text--keyboard-selected,
+    .react-datepicker__quarter-text--keyboard-selected,
+    .react-datepicker__year-text--keyboard-selected {
+        border-radius: 0.3rem;
+        background-color: $color-2;
+        border-radius: 50px;
+    }
+
+    .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--in-range, .react-datepicker__year-text--in-range),
+    .react-datepicker__month-text--in-selecting-range:not(.react-datepicker__day--in-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--in-range, .react-datepicker__year-text--in-range),
+    .react-datepicker__quarter-text--in-selecting-range:not(.react-datepicker__day--in-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--in-range, .react-datepicker__year-text--in-range),
+    .react-datepicker__year-text--in-selecting-range:not(.react-datepicker__day--in-range, .react-datepicker__month-text--in-range, .react-datepicker__quarter-text--in-range, .react-datepicker__year-text--in-range) {
+        background-color: $color-2;
+        border-radius: 50px;
+    }
+
+    .react-datepicker__day--selected:hover,
+    .react-datepicker__day--in-selecting-range:hover,
+    .react-datepicker__day--in-range:hover,
+    .react-datepicker__month-text--selected:hover,
+    .react-datepicker__month-text--in-selecting-range:hover,
+    .react-datepicker__month-text--in-range:hover,
+    .react-datepicker__quarter-text--selected:hover,
+    .react-datepicker__quarter-text--in-selecting-range:hover,
+    .react-datepicker__quarter-text--in-range:hover,
+    .react-datepicker__year-text--selected:hover,
+    .react-datepicker__year-text--in-selecting-range:hover,
+    .react-datepicker__year-text--in-range:hover {
+        background-color: $color-1;
+        border-radius: 50px;
+    }
+
+    .react-datepicker__day--keyboard-selected {
+        background-color: white;
+    }
+
+    .react-datepicker__day--keyboard-selected.react-datepicker__day--in-range {
+        background-color: $color-1;
+    }
+
+    .react-datepicker__year-read-view--down-arrow,
+    .react-datepicker__month-read-view--down-arrow,
+    .react-datepicker__month-year-read-view--down-arrow,
+    .react-datepicker__navigation-icon::before {
+        border-color: #000;
+        border-style: solid;
+        border-width: 2px 2px 0 0;
+        content: "";
+        display: block;
+        height: 5px;
+        position: absolute;
+        top: 10px;
+        width: 5px;
+    }
+
+    .react-datepicker__year-read-view--down-arrow,
+    .react-datepicker__month-read-view--down-arrow,
+    .react-datepicker__month-year-read-view--down-arrow,
+    .react-datepicker__navigation-icon::before {
+        top: 0px;
+    }
+
+    .react-datepicker .react-datepicker__day-names {
+        display: flex;
+        justify-content: space-between;
+        margin: 0px 0.4rem;
+        text-align: center;
+    }
+
+    .react-datepicker__header {
+        text-align: center;
+        background-color: white;
+        border-bottom: 1px solid #aeaeae;
+        border-top-left-radius: 15px;
+        padding: 8px 0 0px 0px;
+        position: relative;
+    }
+

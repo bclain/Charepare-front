@@ -1,0 +1,178 @@
+.rdvdisp {
+    border-radius: 9px;
+    padding: 2px;
+    background-color: $color-1;
+    width: 100%;
+    box-shadow: 0px 4px 4px 0px rgba(133, 255, 198, 0.25);
+
+    &.aconfirm {
+        background-color: $color-alert-dark;
+
+        .nouv {
+            color: white;
+            display: block;
+        }
+
+        .nouv {
+            width: 100%;
+            text-align: center;
+        }
+    }
+
+    &.clientvue {
+        .clientn {
+            display: none;
+        }
+
+        .contentr {
+            .op {
+                opacity: 0;
+                display: none;
+            }
+
+            .details {
+                display: none;
+            }
+
+            .presta {
+                display: inherit;
+            }
+
+            .clientn {
+                display: none;
+            }
+        }
+    }
+
+    &.client {
+        .clientn {
+            display: none;
+        }
+
+        .contentr {
+            .infos {
+                .name {
+                    display: none;
+                }
+            }
+
+            .op {
+                opacity: 0;
+                display: none;
+            }
+
+            .details {
+                display: none;
+            }
+
+            .presta {
+                display: inherit;
+            }
+
+            .clientn {
+                display: none !important;
+            }
+
+            .detailsbtn {
+                display: none;
+            }
+        }
+    }
+
+    .nouv {
+        display: none;
+    }
+
+    .contentr {
+        background-color: white;
+        display: flex;
+        width: 100%;
+        padding: 5px 2px 5px 2px;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 7px;
+        gap: 5px;
+        color: black;
+
+        &.open {
+            .op {
+                transition: 200ms ease-in-out;
+                opacity: inherit;
+                display: inherit;
+            }
+
+            .detailsbtn {
+                svg {
+                    transition: 200ms ease-in-out;
+                    transform: rotate(180deg);
+                }
+            }
+        }
+
+        .presta {
+            display: none;
+        }
+
+        .detailsbtn {
+            svg {
+                transition: 200ms ease-in-out;
+            }
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .op {
+            transition: 200ms ease-in-out;
+            opacity: 0;
+            display: none;
+        }
+
+        .infos {
+            display: flex;
+            width: 100%;
+            border-radius: 9px;
+            padding: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 7px;
+            align-self: stretch;
+            background-color: $grey-back;
+
+            .name {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                gap: 7px;
+                flex-wrap: wrap;
+
+                .grp {
+                    width: fit-content;
+
+                }
+            }
+
+            .prestar {
+                padding: 7px;
+                align-self: stretch;
+                background-color: white;
+                border-radius: 9px;
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+    }
+
+    .justify {
+        padding: 5px;
+
+        p {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+    }
+}

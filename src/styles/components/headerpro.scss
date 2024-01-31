@@ -1,0 +1,68 @@
+.headerpro {
+    width: 100%;
+    height: 55px;
+    background-color: $grey-selection;
+    display: flex;
+    padding: 20px 30px;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+    gap: 18px;
+
+    .titre {
+        flex: 1 0 0;
+        color: #000;
+        font-weight: 600;
+        font-size: 24px;
+    }
+
+    .notifs {
+        border-radius: 29px;
+        padding: 10px;
+        gap: 10px;
+        display: flex;
+        border: 1px solid #FF5E00;
+        background: #FFF;
+        transition: 200ms ease-in-out;
+        align-items: center;
+
+        p {
+            display: none;
+        }
+
+        svg {
+            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+            transition: 200ms ease-in-out;
+        }
+
+        &:hover {
+            transition: 200ms ease-in-out;
+            filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+            cursor: pointer;
+
+            svg {
+                filter: none;
+                transition: 200ms ease-in-out;
+            }
+        }
+
+        &.nouv {
+            border-radius: 9px;
+            p {
+                display: inline;
+            }
+
+            svg {
+                transform: rotate(25deg);
+            }
+
+            &:hover {
+                svg {
+                    transform: rotate(0deg);
+                }
+
+            }
+        }
+    }
+
+}

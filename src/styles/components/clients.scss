@@ -1,0 +1,104 @@
+.clients {
+    padding: 5px;
+
+    .right {
+        flex-direction: row;
+        gap: 15px;
+        padding: 10px;
+        border: 1px solid $grey-border;
+        border-radius: 9px;
+    }
+
+    .clientlist {
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+        padding: 12px 14px;
+        flex-direction: column;
+        gap: 7px;
+        border-radius: 9px;
+        border: 1px solid $grey-border;
+        background: $grey-back;
+        overflow: scroll;
+        flex: 1 1;
+
+        .client {
+            padding: 10px 20px;
+            justify-content: left;
+            align-items: center;
+            gap: 20px;
+            align-self: stretch;
+            display: flex;
+            background-color: white;
+            border-radius: 9px;
+            transition: 200ms ease-in-out;
+            border: 3px solid transparent;
+            cursor: pointer;
+            svg{
+                width: 0px;
+                transition: 200ms ease-in-out;
+            }
+            .nom {
+                align-self: stretch;
+                display: flex;
+                flex: 1 0;
+                align-content: center;
+                align-items: center;
+            }
+            &.actif{
+                border: 3px solid #006963;
+                svg{
+                    width: 10px;
+                    transition: 200ms ease-in-out;
+                }
+            }
+            &:hover{
+                border: 3px solid #006963;
+            }
+        }
+    }
+
+    .details {
+        width: 500px;
+        gap: 15px;
+        display: flex;
+        flex-direction: column;
+
+        .ca {
+            border-radius: 9px;
+            background: $grey-back;
+            padding: 15px;
+            gap: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .can {
+            font-size: 24px;
+        }
+
+        .clientdet {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 1px solid $grey-border;
+            border-radius: 9px;
+            overflow: auto;
+            //box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+            .info{
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px;
+                gap: 9px;
+                width: 100%;
+                .grp {
+    
+                    .danger {
+                       justify-self: self-end;
+                    }   
+                }
+            }
+        }
+    }
+}

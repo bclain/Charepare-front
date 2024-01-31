@@ -1,0 +1,24 @@
+.agenda {
+    flex-direction: column;
+
+    .left {
+        width: 400px;
+        &.horaires{
+            width: 500px;
+        }
+    }
+
+    .right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: scroll;
+        position: relative;
+
+        
+    }
+    .filtre {
+        padding: 10px; }
+
+}

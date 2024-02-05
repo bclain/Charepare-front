@@ -306,7 +306,7 @@ section, .section{
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   border: transparent .5px solid;
   box-shadow: 2px 3px #7D0404;
   border-radius: 0px;
@@ -316,8 +316,13 @@ section, .section{
 
   p {
     color: $dark;
+    font-size: 16px;
     font-weight: 1000;
     font-family: $font-2; 
+    margin-left:1rem;
+    margin-right: 1rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
   }
 
   &.danger {
@@ -355,6 +360,7 @@ section, .section{
     color: $white;
     font-weight: 1000;
     font-family: $font-1; 
+    margin-top: 0.2rem;
   }
 }
 

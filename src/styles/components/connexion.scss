@@ -1,0 +1,21 @@
+.connexion{
+    grid-column: 5/-5;
+    h1{
+        color: $white;
+        font-family: $font-2;
+        font-size: 34px;
+        margin-top: 3rem;
+        display: flex;
+        justify-content: center;
+    }
+
+
+    label{
+        color: #ffffff;
+        font-family: $font-1;
+    }
+
+    input{
+        border-radius: 0;
+    }
+}

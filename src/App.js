@@ -7,6 +7,7 @@ import Navbar from './components/Navbar'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./styles/index.scss";
+import CreationCompte from './pages/CreationCompte';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         {/* Routes for the front */}
         <Route exact path="/" element={<GaragePage />} />
         <Route exact path="/connexion" element={<Connexion />} />
+        <Route exact path="/creercompte" element={<CreationCompte />} />
 
       </Routes>
     </Router>

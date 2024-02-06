@@ -22,6 +22,7 @@
   border-width: 0.01rem;
   border-color:#757575;
   margin-bottom: 3rem;
+  align-items: center;
   }
 
   p {
@@ -57,7 +58,8 @@
         justify-content: space-between;
     }
     .nomService{
-        margin-top: 0.2rem;
+        display: flex;
+        align-items: center;
     }
     .serviceFin{
         display: flex;

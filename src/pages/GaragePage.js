@@ -1,9 +1,25 @@
 import React from 'react';
 
 const GaragePage = () => {
+
+
+
+
     return (
             <section>
                 <div className="contentfront">
+                    <div className='backgarage'>
+                    <svg viewBox="0 0 1204 901" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M-0.00012207 -6.94418e-05L-7.34329e-05 1121H1204V-0.00012207L-0.00012207 -6.94418e-05ZM862.25 38.0224C844.636 33.3415 826.016 34.1124 808.85 40.2335L866.379 97.8104C873.412 105.092 877.304 114.844 877.216 124.967C877.128 135.09 873.067 144.773 865.909 151.931C858.75 159.089 849.066 163.15 838.943 163.238C828.819 163.326 819.066 159.434 811.784 152.402L754.203 94.8247C748.104 111.989 747.348 130.598 752.036 148.2C756.724 165.802 766.635 181.571 780.464 193.429C794.292 205.286 811.39 212.676 829.502 214.624C847.614 216.572 865.892 212.987 881.926 204.342L1157.6 480L1194 443.606L918.349 167.948C927.02 151.919 930.626 133.637 928.69 115.516C926.755 97.3948 919.368 80.2871 907.506 66.4515C895.643 52.616 879.863 42.7033 862.25 38.0224ZM1157.6 43.1935L1075.7 88.699L1066.59 134.204L1011.99 188.796L1048.41 225.19L1102.98 170.599L1148.49 161.487L1194 79.6133L1157.6 43.1935ZM939.198 334.398L902.776 298.004L766.276 434.495L764.268 436.734C760.187 441.886 758.232 448.403 758.803 454.951C759.374 461.498 762.428 467.579 767.339 471.947C772.25 476.314 778.646 478.638 785.216 478.441C791.786 478.245 798.031 475.542 802.672 470.889L939.198 334.398Z" fill="url(#paint0_linear_8_159)" fill-opacity="0.37"/>
+                        <defs>
+                        <linearGradient id="paint0_linear_8_159" x1="1167.28" y1="1.41758" x2="984.253" y2="660.85" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#FEEAEA"/>
+                        <stop offset="1" stop-opacity="0"/>
+                        </linearGradient>
+                        </defs>
+                    </svg>
+
+                    </div>
                     <div className='garagepage'>
                         <h1>Réparation Trois-rivières</h1>
                         <div className="contacts">
@@ -29,7 +45,7 @@ const GaragePage = () => {
                         <div className="services">
                             <p className='titre'>Services</p>
                             <div className='service'>
-                                <div className='nomService'>Changement d'huile</div>
+                                <div className='nomService'> <p>Changement d'huile</p> </div>
                                 <div className='serviceFin'>
                                     <div className='temps'>25min </div>
                                     <div className='ligne'>|</div>
@@ -37,7 +53,7 @@ const GaragePage = () => {
                                     <div>
                                         <button className='btn-base'>
                                             <p>Réserver</p>
-                                            <svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <svg  viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M3.57249 11.4584L4.34049 10.6272L4.34051 10.6273L6.71742 8.05501L6.71709 8.05502L8.74258 5.86307L8.78719 5.86131L8.764 5.83989L8.78577 5.81633L8.74044 5.81812L6.54897 3.79306L6.54901 3.79306L4.29305 1.70842L4.29321 1.70825L3.14557 0.647763L0.404775 0.755939L2.64338 2.82454L2.64298 2.82456L5.2151 5.20136L5.21512 5.20134L6.02321 5.94806L4.98424 7.07242L4.98429 7.07247L2.89984 9.32822L2.90004 9.32821L0.831698 11.5665L3.57249 11.4584Z" fill="black" />
                                             </svg>
                                         </button>

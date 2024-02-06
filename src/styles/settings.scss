@@ -24,17 +24,23 @@ $min-button-font-size: 15px !default;
 $max-button-font-size: 20px !default;
 
 
-h1, h2, h3, h4, h5{
+h1,
+h2,
+h3,
+h4,
+h5 {
   text-wrap: balance;
 }
 
-h3{
-  font-size:  $max-font-size-h3;
+h3 {
+  font-size: $max-font-size-h3;
   font-weight: 500;
 }
 
-p{
+p {
   text-wrap: pretty;
+  margin: 0px;
+  padding: 0px;
 }
 
 $dark: #222831;
@@ -44,7 +50,7 @@ $color-2: #25AAA5;
 $color-alert: #FF4D00;
 $color-back-alert: #FFE2D1;
 $color-alert-dark: #943500;
-$color-back-success:#92FFB1;
+$color-back-success: #92FFB1;
 $grey-light: #FCFCFC;
 $grey-strong: #D9D9D9;
 $grey-back: #F2F2F2;
@@ -62,7 +68,7 @@ $big: calc((100vw/12)*1);
 $mid: calc((100vw/12)*.5);
 $small: calc((100vw/12)*.25);
 $xsmall: calc((100vw/12)*.15);
-$max-w:1440px;
+$max-w: 1440px;
 
 @mixin verticalCenter {
   display: flex;
@@ -70,7 +76,9 @@ $max-w:1440px;
   align-items: center;
 }
 
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -96,8 +104,8 @@ $max-w:1440px;
   scrollbar-track-color: $grey-selection;
 }
 
-html{
-  
+html {
+
   scroll-behavior: smooth;
 }
 
@@ -108,8 +116,6 @@ body {
   color: black;
   overflow-y: scroll;
 }
-
-
 
 .page {
   display: flex;
@@ -126,6 +132,13 @@ body {
   overflow: auto;
 }
 
+.backgarage {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
 
 .sousmenupro {
   width: calc(100% - $small);
@@ -152,7 +165,8 @@ body {
       background: $color-1;
       color: white;
     }
-    &:hover{
+
+    &:hover {
       background-color: $color-2;
       color: white;
     }
@@ -211,8 +225,9 @@ a {
   color: $color-1;
   transition: 150ms ease-in-out;
   background-color: white;
-  p{
-      font-size: 16px;
+
+  p {
+    font-size: 16px;
   }
 }
 
@@ -263,6 +278,7 @@ span {
   width: 100%;
   height: 1px;
   align-self: center;
+
   &.verti {
     height: 10px;
     width: 1px;
@@ -277,9 +293,11 @@ span {
 }
 
 
-section, .section{
+section,
+.section {
   display: flex;
   justify-content: center;
+
   .contentfront {
     width: 90%;
     margin: auto;
@@ -287,15 +305,17 @@ section, .section{
     grid-template-columns: repeat(12, 1fr);
     align-items: center;
     max-width: $max-w;
+    position: relative;
   }
 }
 
 
-.iconl{
+.iconl {
   display: flex;
   align-items: center;
   gap: 10px;
-  p{
+
+  p {
     white-space: nowrap;
   }
 }
@@ -318,8 +338,8 @@ section, .section{
     color: $dark;
     font-size: 16px;
     font-weight: 1000;
-    font-family: $font-2; 
-    margin-left:1rem;
+    font-family: $font-2;
+    margin-left: 1rem;
     margin-right: 1rem;
     margin-top: 0.2rem;
     margin-bottom: 0.2rem;
@@ -337,8 +357,7 @@ section, .section{
   }
 
   &:hover {
-    border-color: $grey-writted;
-    cursor: pointer;
+    box-shadow: 3px 5px #7D0404;
   }
 
 }
@@ -359,7 +378,7 @@ section, .section{
   p {
     color: $white;
     font-weight: 1000;
-    font-family: $font-1; 
+    font-family: $font-1;
     margin-top: 0.2rem;
   }
 }
@@ -433,20 +452,22 @@ section, .section{
   transition: 150ms ease-in-out;
   position: relative;
   overflow: hidden;
-  
-  &.spe{
+
+  &.spe {
     background: $color-2;
     padding: 5px 5px 5px 15px;
-    span{
+
+    span {
       position: absolute;
       width: calc(100%);
       height: 100%;
       left: -20px;
       transform: skew(20deg);
       background: $color-1;
-      transition: 150ms ease-in-out;  
+      transition: 150ms ease-in-out;
     }
-    .icon{
+
+    .icon {
       padding: 5px;
       border-radius: 50px;
       background-color: white;
@@ -459,36 +480,40 @@ section, .section{
       transition: 150ms ease-in-out;
       aspect-ratio: 1;
     }
+
     &:hover {
       background: none;
       cursor: pointer;
       transition: 150ms ease-in-out;
-      span{
+
+      span {
         background-color: $dark;
         left: -10px;
         width: 150%;
         transition: 150ms ease-in-out;
       }
     }
-    
-  p {
-    padding: 5px;
-    color: white;
-    z-index: 2;
-    font-family: "Inter", sans-serif;
-  }
+
+    p {
+      padding: 5px;
+      color: white;
+      z-index: 2;
+      font-family: "Inter", sans-serif;
+    }
   }
 
-  &.black{
-      background-color: $blackL;
+  &.black {
+    background-color: $blackL;
   }
-  
+
   p {
     color: white;
-    z-index: 2;    font-size: 16px;
+    z-index: 2;
+    font-size: 16px;
     white-space: nowrap;
     font-family: "Inter", sans-serif;
   }
+
   &:hover {
     background: $dark;
     cursor: pointer;
@@ -521,6 +546,7 @@ section, .section{
   width: 100vw;
   z-index: 10000;
   overflow: scroll;
+
   .modal-content {
     display: inline-flex;
     padding: 20px;
@@ -573,6 +599,7 @@ section, .section{
 .filtre {
   display: flex;
   gap: 5px 10px;
+
   a {
     color: black;
     background: white;
@@ -589,7 +616,8 @@ section, .section{
   &.verti {
     flex-direction: column;
   }
-  span{
+
+  span {
     align-self: center;
   }
 }
@@ -612,7 +640,7 @@ section, .section{
   }
 }
 
-.loadingAnim{
+.loadingAnim {
   justify-self: center;
   align-self: center;
   width: 100%;
@@ -620,17 +648,20 @@ section, .section{
   justify-content: center;
   align-items: center;
   display: flex;
-  svg{
+
+  svg {
     height: 70px;
-    fill:$color-1
+    fill: $color-1
   }
 }
 
 
 .dropzone.drag-over {
   /* styles lorsque un fichier est survolé */
-  border: 1px dashed $color-1 ; /* exemple de style */
-  background-color: rgba(0, 0, 0, 0.1); /* exemple de style */
+  border: 1px dashed $color-1 ;
+  /* exemple de style */
+  background-color: rgba(0, 0, 0, 0.1);
+  /* exemple de style */
 }
 
 @keyframes loadinganim {

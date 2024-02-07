@@ -20,6 +20,8 @@ function App() {
         <Route exact path="/" element={<GaragePage />} />
         <Route exact path="/connexion" element={<Connexion />} />
         <Route exact path="/creercompte" element={<CreationCompte />} />
+        <Route exact path="/calendrier" element={<Connexion />} />
+        <Route exact path="/creercompte" element={<CreationCompte />} />
 
       </Routes>
     </Router>

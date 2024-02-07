@@ -6,7 +6,6 @@ const Connexion = () => {
             <div className="contentfront">
                 <div className='connexion'>
                     <h1>Connexion</h1>
-
                     <div>
                         <form>
                             <form>
@@ -21,7 +20,6 @@ const Connexion = () => {
                                 <button type="submit" class="btn-base btn-primary">Submit</button>
                             </form>
                         </form>
-
                     </div>
                 </div>
             </div>

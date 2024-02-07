@@ -3,7 +3,9 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import GaragePage from './pages/GaragePage';
 import Connexion from './pages/Connexion';
-import Navbar from './components/Navbar'
+import Navbar from './components/Navbar';
+import Agenda from './pages/Pro/Agenda';
+import Activite from './pages/Pro/Activite'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./styles/index.scss";
@@ -20,8 +22,8 @@ function App() {
         <Route exact path="/" element={<GaragePage />} />
         <Route exact path="/connexion" element={<Connexion />} />
         <Route exact path="/creercompte" element={<CreationCompte />} />
-        <Route exact path="/calendrier" element={<Connexion />} />
-        <Route exact path="/creercompte" element={<CreationCompte />} />
+        <Route exact path="/calendrier" element={<Agenda/>} />
+        <Route exact path="/activite" element={<Activite/>} />
 
       </Routes>
     </Router>

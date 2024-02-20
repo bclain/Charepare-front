@@ -5,28 +5,42 @@ import GaragePage from './pages/GaragePage';
 import Connexion from './pages/Connexion';
 import Navbar from './components/Navbar';
 import Agenda from './pages/Pro/Agenda';
-import Activite from './pages/Pro/Activite'
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
+import Activite from './pages/Pro/Activite';
+import { AuthProvider } from './contexts/AuthContext';
+import { MapsLoadProvider } from './contexts/MapLoadContext';
+import { ModalProvider } from './contexts/ModalContext';
+import Modal from './components/Modal';
 import "./styles/index.scss";
-import CreationCompte from './pages/CreationCompte';
+import Accueilpro from  './pages/Pro/Accueilpro'
 
 function App() {
   return (
-
+    <AuthProvider>
+      
+    <MapsLoadProvider >
+      <ModalProvider>
     <Router>
-      <Navbar/>
+      
+    <Modal>
+        </Modal>
       <Routes>
 
         {/* Routes for the front */}
         <Route exact path="/" element={<GaragePage />} />
-        <Route exact path="/connexion" element={<Connexion />} />
-        <Route exact path="/creercompte" element={<CreationCompte />} />
+
+        {/* <Route exact path="/connexion" element={<Connexion />} />
+        <Route exact path="/creercompte" element={<CreationCompte />} /> */}
+
+        <Route exact path="/acceuilpro" element={<Accueilpro/>} />
         <Route exact path="/calendrier" element={<Agenda/>} />
         <Route exact path="/activite" element={<Activite/>} />
 
       </Routes>
     </Router>
+    
+    </ModalProvider>
+    </MapsLoadProvider>
+  </AuthProvider>
   );
 }
 

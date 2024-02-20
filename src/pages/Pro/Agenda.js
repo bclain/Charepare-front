@@ -14,7 +14,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Loader from '../../components/Loader';
 
 const Agenda = () => {
-    const { userId } = useAuth();
+    //const { userId } = useAuth();
     const [sendSubmit, setSendSubmit] = useState(true);
     const [idDispo, setIdDispo] = useState(true);
 
@@ -22,15 +22,15 @@ const Agenda = () => {
       
     ]);
 
-    const { data, loading, error } = useFetch(`/horaires/?filters[pro][$eq]=${userId}&populate=*`, 'GET', null, true, sendSubmit);
+   // const { data, loading, error } = useFetch(`/horaires/?filters[pro][$eq]=${userId}&populate=*`, 'GET', null, true, sendSubmit);
 
-    useEffect(() => {
-        if(data){
-            setIdDispo(data[0].id);
-            setDispo(data[0].attributes.details);
-        } 
-        setSendSubmit(false);
-    }, [data]);
+    // useEffect(() => {
+    //     if(data){
+    //         setIdDispo(data[0].id);
+    //         setDispo(data[0].attributes.details);
+    //     } 
+    //     setSendSubmit(false);
+    // }, [data]);
 
     const [dates, setDates] = useState({ startDate: null, endDate: null });
     const [activeItem, setActiveItem] = useState('agenda');

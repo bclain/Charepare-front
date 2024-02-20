@@ -7,7 +7,6 @@ import Modal from "../../components/Modal";
 import Clients from '../../components/Clients';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MaPage from '../../components/MaPage';
-import RayonMap from '../../components/RayonMap';
 import { useAuth } from '../../contexts/AuthContext';
 import useFetch from '../../hooks/useFetch';
 
@@ -80,11 +79,6 @@ const Activite = () => {
                 {activeItem === 'ma-page' && (
                     <MaPage userId={userId} dataPage={actualData} newData={()=>setSendSubmit(true) }  confirm={(e) => setConfirmNeed(e)}/>
                 )}
-
-                {activeItem === 'champ-action' && (
-                    <RayonMap dataPage={actualData}  confirm={(e) => setConfirmNeed(e)} newData={()=>setSendSubmit(true)}  />
-                )}
-
 
             </div>
         </div>

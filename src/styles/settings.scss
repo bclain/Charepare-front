@@ -45,16 +45,16 @@ p {
 
 $dark: #222831;
 $light: #C5FFFE;
-$color-1: #006963;
+$color-1: #6C0404;
 $color-2: #25AAA5;
-$color-alert: #FF4D00;
+$color-alert: #FF0000;
 $color-back-alert: #FFE2D1;
 $color-alert-dark: #943500;
 $color-back-success: #92FFB1;
 $grey-light: #FCFCFC;
-$grey-strong: #D9D9D9;
-$grey-back: #F2F2F2;
-$grey-border: #D9D9D9;
+$grey-strong: #343434;
+$grey-back: #343434;
+$grey-border: #E6E6E6;
 $grey-writted: #787878;
 $grey-selection: #D8D8D8;
 $grey-coloured: #dce6e6;
@@ -127,9 +127,10 @@ body {
   align-items: flex-start;
   height: 100%;
   flex: 1 1;
-  background-color: $grey-light;
+  background-color: $dark;
   width: 100%;
   overflow: auto;
+  color: $white;
 }
 
 .backgarage {
@@ -255,7 +256,7 @@ button {
 }
 
 .desc {
-  color: $grey-writted;
+  color: $grey-border;
 }
 
 .grp {
@@ -328,21 +329,19 @@ section,
   align-items: center;
   gap: 10px;
   border: transparent .5px solid;
-  box-shadow: 2px 3px #7D0404;
   border-radius: 0px;
-  padding: 3px;
-  transition: 150ms ease-in-out;
+  padding: 2px;
+  transition: 50ms ease-in-out;
   height: fit-content;
 
+  svg{
+    width: 10px;
+  }
   p {
     color: $dark;
     font-size: 16px;
     font-weight: 1000;
     font-family: $font-2;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-top: 0.2rem;
-    margin-bottom: 0.2rem;
   }
 
   &.danger {
@@ -357,29 +356,34 @@ section,
   }
 
   &:hover {
-    box-shadow: 3px 5px #7D0404;
+    box-shadow: 0px 0px #7D0404;
+    transform: translate(1px, 1px);
   }
 
 }
 
 .btn-simple {
   border: none;
-  background-color: transparent;
+  background-color: $white;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   border: transparent .5px solid;
+  box-shadow: 2px 3px #7D0404;
   border-radius: 0px;
-  padding: 3px;
-  transition: 150ms ease-in-out;
+  padding: 5px;
+  transition: 50ms ease-in-out;
   height: fit-content;
 
   p {
-    color: $white;
+    color: $blackL;
     font-weight: 1000;
     font-family: $font-1;
-    margin-top: 0.2rem;
+  }
+  &:hover {
+    box-shadow: 0px 0px #7D0404;
+    transform: translate(1px, 1px);
   }
 }
 

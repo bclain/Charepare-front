@@ -1,4 +1,5 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 
 const GaragePage = () => {
 
@@ -6,6 +7,9 @@ const GaragePage = () => {
 
 
     return (
+        <div>
+            
+      <Navbar/>
             <section>
                 <div className="contentfront">
                     <div className='backgarage'>
@@ -66,6 +70,7 @@ const GaragePage = () => {
 
                 </div>
             </section>
+        </div>
     );
 };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import Logo from '../img/logo.png';
+import Logo from '../img/logo.svg';
 import { useAuth } from '../contexts/AuthContext';
 
 const Leftmenu = () => {

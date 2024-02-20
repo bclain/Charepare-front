@@ -17,12 +17,11 @@
     }
 
     .notifs {
-        border-radius: 29px;
         padding: 10px;
         gap: 10px;
         display: flex;
-        border: 1px solid #FF5E00;
-        background: #FFF;
+        border: 1px solid $color-alert-dark;
+        background: $grey-back;
         transition: 200ms ease-in-out;
         align-items: center;
 
@@ -47,7 +46,6 @@
         }
 
         &.nouv {
-            border-radius: 9px;
             p {
                 display: inline;
             }

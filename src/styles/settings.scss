@@ -44,7 +44,7 @@ p {
 }
 
 $dark: #222831;
-$light: #C5FFFE;
+$light: #b5b9b9;
 $color-1: #6C0404;
 $color-2: #25AAA5;
 $color-alert: #FF0000;
@@ -330,7 +330,7 @@ section,
   gap: 10px;
   border: transparent .5px solid;
   border-radius: 0px;
-  padding: 2px;
+  padding: 2px 5px;
   transition: 50ms ease-in-out;
   height: fit-content;
 
@@ -370,7 +370,7 @@ section,
   align-items: center;
   gap: 10px;
   border: transparent .5px solid;
-  box-shadow: 2px 3px #7D0404;
+  box-shadow: 2px 3px $light;
   border-radius: 0px;
   padding: 5px;
   transition: 50ms ease-in-out;
@@ -389,7 +389,6 @@ section,
 
 .btn-pro {
   background: $color-1;
-  border-radius: 9px;
   background: $color-1;
   display: flex;
   padding: 10px;

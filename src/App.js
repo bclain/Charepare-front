@@ -31,8 +31,8 @@ function App() {
         {/* <Route exact path="/connexion" element={<Connexion />} />
         <Route exact path="/creercompte" element={<CreationCompte />} /> */}
 
-        <Route exact path="/acceuilpro" element={<Accueilpro/>} />
-        <Route exact path="/calendrier" element={<Agenda/>} />
+        <Route exact path="/pro/accueil" element={<Accueilpro/>} />
+        <Route exact path="/pro/agenda/:sousMenu" element={<Agenda/>} />
         <Route exact path="/activite" element={<Activite/>} />
 
       </Routes>

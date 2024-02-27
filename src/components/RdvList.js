@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import RdvDisp from './RdvDisp';
 import { format, isEqual } from 'date-fns';
 import { fr } from 'date-fns/locale'; // Importez la locale française
+import useFetch from '../hooks/useFetch';
 
-
-const rdvdate = new Date(2023, 8, 23);
 
 const rendezVous = [
     {
@@ -349,6 +348,9 @@ const rendezVous = [
 const RdvList = ({ typeList, idpers }) => {
     const [listId, setListId] = useState([]);
     const [groupedRdv, setGroupedRdv] = useState([]);
+
+    const { data: rdvsdata, loading: rdvsloading } = useFetch(`/rendezvous`, 'GET', null, true, true);
+
 
     useEffect(() => {
         let filteredRdv;

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import GaragePage from './pages/GaragePage';
 import Connexion from './pages/Connexion';
 import Navbar from './components/Navbar';
+import { AlertProvider } from './contexts/AlertContext';
 import Agenda from './pages/Pro/Agenda';
 import Activite from './pages/Pro/Activite';
 import { AuthProvider } from './contexts/AuthContext';
@@ -19,6 +20,7 @@ function App() {
       
     <MapsLoadProvider >
       <ModalProvider>
+      <AlertProvider>
     <Router>
       
     <Modal>
@@ -38,6 +40,7 @@ function App() {
       </Routes>
     </Router>
     
+    </AlertProvider>
     </ModalProvider>
     </MapsLoadProvider>
   </AuthProvider>

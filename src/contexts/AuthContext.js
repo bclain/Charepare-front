@@ -34,14 +34,14 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await makeRequest({
                 method: 'POST',
-                url: '/auth/local',
+                url: '/login',
                 data: {
-                    identifier: email,
+                    email: email,
                     password: password,
                 },
             });
-            const data = response.data;
-            if (data.jwt) {
+            const data = response;
+            if (data.token) {
                 localStorage.setItem('authToken', data.jwt);
                 localStorage.setItem('userId', data.user.id);
                 console.log(data.user.id)

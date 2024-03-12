@@ -10,6 +10,7 @@ const RegisterForm = () => {
         password: '',
         confirmPassword: '',
         nom: '',
+        adresse: '',
         prenom: '',
         adresse: '',
         telephone: '',
@@ -19,6 +20,7 @@ const RegisterForm = () => {
     const { register } = useAuth();
     const { closeModal } = useModal();
     const [errors, setErrors] = useState({});
+    
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormState({
@@ -169,9 +171,18 @@ const RegisterForm = () => {
                 />
                 {errors.telephone && <p className="error">{errors.telephone}</p>}
             </div>
-
-            <AddressAuto err={errors.adresse? errors.adresse : false} onAddressSelect={(address) => setFormState({ ...formState, adresse: address })} newSelect={formState.adresse} />
-            
+            <div className="form-group">
+                <label htmlFor="telephone">Adresse</label>
+                <input
+                    type="tel"
+                    className="inputs"
+                    name="adresse"
+                    value={formState.adresse}
+                    onChange={handleInputChange}
+                    placeholder="Adresse"
+                />
+                {errors.adresse && <p className="error">{errors.adresse}</p>}
+            </div>
             <div className="form-group">
                 <label htmlFor="password">Mot de passe</label>
                 <input

@@ -22,8 +22,8 @@ const useFetch = (url, method, body, auth, sendData) => {
                             data: body,
                             authToken: localStorage.getItem('authToken')
                         });
-                        console.log(response.data.data);
-                        setData(response.data.data);
+                        console.log(response.data);
+                        setData(response.data);
                     } catch (err) {
                         console.error("Erreur lors de la requête:", err);
                         setError(err);
@@ -39,8 +39,8 @@ const useFetch = (url, method, body, auth, sendData) => {
                             url: url,
                             data: body
                         });
-                        console.log(response.data.data);
-                        setData(response.data.data);
+                        console.log(response.data);
+                        setData(response.data);
                     } catch (err) {
                         console.error("Erreur lors de la requête:", err);
                         setError(err);

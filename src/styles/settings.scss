@@ -45,8 +45,8 @@ p {
 
 $dark: #111317;
 $light: #b5b9b9;
-$color-1: #6C0404;
-$color-2: #8e0c0c;
+$color-1: rgb(68, 36, 0);
+$color-2: #ff8800;
 $color-alert: #FF0000;
 $color-back-alert: #FFE2D1;
 $color-alert-dark: #943500;
@@ -113,7 +113,7 @@ html {
 body {
   font-family: $font-1;
   background-color: $dark;
-  color: black;
+  color: white;
   overflow-y: scroll;
 }
 
@@ -325,42 +325,35 @@ section,
   align-items: center;
   gap: 10px;
   border: transparent .5px solid;
+  box-shadow: 2px 3px $light;
   border-radius: 0px;
-  padding: 2px 5px;
+  padding: 5px;
   transition: 50ms ease-in-out;
   height: fit-content;
 
-  svg{
-    width: 10px;
-  }
   p {
-    color: $dark;
+    color: $blackL;
     font-size: 16px;
     font-weight: 1000;
-    font-family: $font-2;
   }
-
-  &.danger {
-    p {
-      color: $color-alert;
-    }
-
-    &:hover {
-      background-color: $grey-back;
-      cursor: pointer;
-    }
-  }
-
   &:hover {
     box-shadow: 0px 0px #7D0404;
     transform: translate(1px, 1px);
+  }
+  &.danger{
+      background-color: $color-alert-dark;
+      
+    p {
+      color: $white;
+    }
+
   }
 
 }
 
 .btn-simple {
   border: none;
-  background-color: $white;
+  background-color: $dark;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -373,9 +366,9 @@ section,
   height: fit-content;
 
   p {
-    color: $blackL;
+    color: $white;
     font-weight: 1000;
-    font-family: $font-1;
+    font-size: 16px;
   }
   &:hover {
     box-shadow: 0px 0px #7D0404;
@@ -432,12 +425,12 @@ section,
     background: $grey-back;
 
     p {
-      color: black;
+      color: white;
       font-family: "Inter", sans-serif;
     }
 
     &:hover {
-      background: $grey-selection;
+      background: $blackL;
     }
   }
 
@@ -545,7 +538,7 @@ section,
 
 .modal {
   position: fixed;
-  background: rgba(255, 255, 255, 0.71);
+  background: rgba(0, 0, 0, 0.71);
   top: 0;
   left: 0;
   height: 100%;
@@ -560,12 +553,12 @@ section,
     flex-direction: column;
     align-items: center;
     gap: 40px;
-    border-radius: 15px;
+    border-radius: 3px;
     border: 1px solid $grey-writted;
     min-width: 500px;
     max-width: 100%;
 
-    background: #FFF;
+    background: $blackL;
 
     box-shadow: 15px 31px 40px 0px rgba(0, 0, 0, 0.37);
     margin-top: calc(110px + 10vh);
@@ -608,7 +601,7 @@ section,
   gap: 5px 10px;
 
   a {
-    color: black;
+    color: $grey-border;
     background: white;
     font-size: 16px;
     padding-left: 5px;

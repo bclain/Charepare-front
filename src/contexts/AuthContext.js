@@ -34,18 +34,19 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await makeRequest({
                 method: 'POST',
-                url: '/loginuser',
+                url: '/logingarage',
                 data: {
                     email: email,
                     password: password,
                 },
             });
-            const data = response;
+            const data = response.data;
+            console.log(data.token);
             if (data.token) {
-                localStorage.setItem('authToken', data.jwt);
+                localStorage.setItem('authToken', data.token);
                 localStorage.setItem('userId', data.user.id);
                 console.log(data.user.id)
-                setAuthToken(data.jwt);
+                setAuthToken(data.token);
                 setUserId(data.user.id);
                 setUserLoc(data.adresse);
                 getRole(data.user.id);
@@ -78,7 +79,7 @@ export const AuthProvider = ({ children }) => {
             const data = response.data;
 
             if (data.jwt) {
-                localStorage.setItem('authToken', data.jwt);
+                localStorage.setItem('authToken', data.token);
                 setAuthToken(data.jwt);
                 setUserRole("user");// Défini en tant qu'utilisateur si erreur 401
             } else {

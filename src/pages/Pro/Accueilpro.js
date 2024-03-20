@@ -5,6 +5,7 @@ import RdvList from '../../components/RdvList';
 import RdvDisp from '../../components/RdvDisp';
 import SousMenuPro from '../../components/Sousmenupro';
 import Modal from "../../components/Modal";
+import useFetch from '../../hooks/useFetch';
 
 const Accueilpro = () => {
 
@@ -32,6 +33,9 @@ const Accueilpro = () => {
         },
     };
 
+    const {data, loading, error} = useFetch('/rendezvous/' , 'GET' , null, true, true);
+
+    
     return (
         <div className='page'>
 

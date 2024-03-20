@@ -1,83 +1,222 @@
-.garagepage{
+.garagepage {
     grid-column: 2/-2;
-    h1{
+
+    .contentg{
+        display: flex;
+        flex-direction: column;
+        background-color: none;
+    }
+    &.resa{
+        .contentg{
+            display: none;
+
+        }
+    }
+
+    h1 {
         color: $white;
         font-family: $font-2;
         font-size: 64px;
         margin-top: 3rem;
     }
-    
-.contacts{
-    display: flex;
-    font-family: $font-2;
-    margin-top:2rem;
-  .contact{
-  display: flex;
-  margin-right:1rem;
-  padding:0.5rem;
-  background-color: #000000;
-  color: #ffffff;
-  border-style: solid;
-  border-width: 0.01rem;
-  border-color:#757575;
-  margin-bottom: 3rem;
-  align-items: center;
-  }
 
-  p {
-    margin-left: 0.5rem;
-  }
-}
+    .contacts {
+        display: flex;
+        font-family: $font-2;
+        margin-top: 2rem;
 
-.presentation{
-    color:#ffffff;
-    font-family: $font-2;
-    margin-bottom: 3rem;
-}
+        .contact {
+            display: flex;
+            margin-right: 1rem;
+            padding: 0.5rem;
+            background-color: #000000;
+            color: #ffffff;
+            border-style: solid;
+            border-width: 0.01rem;
+            border-color: #757575;
+            margin-bottom: 3rem;
+            align-items: center;
+        }
 
-.titre{
-    font-size: 24px;
-    font-family: $font-2;
-    margin-bottom: 1rem;
-    color:#ffffff;
-}
+        p {
+            margin-left: 0.5rem;
+        }
+    }
 
-.services{
-    font-family: $font-2;
-    .service{
-        margin-right:1rem;
-        padding:1rem;
-        background-color: #000000;
+    .presentation {
         color: #ffffff;
-        border-style: solid;
-        border-width: 0.01rem;
-        border-color:#757575;
-        margin-bottom: 3rem;
-        display: flex;
-        justify-content: space-between;
+        font-family: $font-2;
     }
-    .nomService{
-        display: flex;
-        align-items: center;
+
+    .titre {
+        font-size: 24px;
+        font-family: $font-2;
+        margin-bottom: 1rem;
+        color: #ffffff;
     }
-    .serviceFin{
-        display: flex;
+
+    .prestations {
+
+        button {
+            width: fit-content;
+            margin-left: 15px;
+            align-self: center;
+
+            svg {
+                width: 10px;
+                transition: 150ms;
+            }
+
+            &.open {
+                svg {
+                    transform: rotate(180deg);
+                    transition: 150ms;
+                }
+            }
+        }
+
+        &.small {
+            ul {
+                gap: 2px;
+                padding: 15px 15px 0px 15px;
+
+                .presta {
+                    &.select {
+                        border: 1px solid $grey-border;
+
+                        &:hover {
+                            cursor: inherit;
+                        }
+                    }
+                }
+            }
+        }
+
+        ul {
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+
+
+
+            .presta {
+                padding: 10px 20px;
+                justify-content: center;
+                align-items: center;
+                gap: 20px;
+                align-self: stretch;
+                display: flex;
+                background-color: $grey-back;
+                transition: 200ms ease-in-out;
+                border: $grey-border 1px solid;
+
+                svg {
+                    width: 0px;
+                    transition: 150ms ease-in-out;
+                }
+
+                .nom {
+                    align-self: stretch;
+                    display: flex;
+                    flex: 1 0;
+                    align-content: center;
+                    align-items: center;
+                    font-size: 16px;
+                    gap: 10px;
+
+                    p {
+                        font-size: 16px;
+                    }
+
+                    span {
+                        height: inherit;
+                        margin-left: 10px;
+                    }
+                }
+
+                .temps {
+                    color: $grey-writted;
+                }
+
+                &.select {
+                    border: $color-1 1px solid;
+
+                    &:hover {
+
+                        cursor: inherit;
+
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    border: $color-1 1px solid;
+
+                    svg {
+                        width: 9px;
+                        transition: 150ms ease-in-out;
+                    }
+                }
+            }
+
+            .titre {
+                padding: 5px 10px;
+                border-radius: 9px;
+                gap: 10px;
+                align-self: stretch;
+                align-items: center;
+                display: flex;
+                transition: 200ms ease-in-out;
+            }
+        }
     }
-    .temps{
-        font-size: 13px;   
-        color:#787878;
-        padding-right: 1rem;
-        margin-top: 0.6rem;
+
+    .services {
+        font-family: $font-2;
+
+        .service {
+            margin-right: 1rem;
+            padding: 1rem;
+            background-color: #000000;
+            color: #ffffff;
+            border-style: solid;
+            border-width: 0.01rem;
+            border-color: #757575;
+            margin-bottom: 3rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .nomService {
+            display: flex;
+            align-items: center;
+        }
+
+        .serviceFin {
+            display: flex;
+        }
+
+        .temps {
+            font-size: 13px;
+            color: #787878;
+            padding-right: 1rem;
+            margin-top: 0.6rem;
+        }
+
+        .ligne {
+            padding-right: 1rem;
+            margin-top: 0.2rem;
+        }
+
+        .cout {
+            font-size: 20px;
+            margin-top: 0.2rem;
+            padding-right: 2rem;
+        }
     }
-    .ligne{
-        padding-right: 1rem;
-        margin-top: 0.2rem;
-    }
-    .cout{
-        font-size: 20px;
-        margin-top: 0.2rem;
-        padding-right: 2rem;
-    }
-}
+
 
 }

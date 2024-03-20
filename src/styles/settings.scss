@@ -45,8 +45,8 @@ p {
 
 $dark: #111317;
 $light: #b5b9b9;
-$color-1: rgb(68, 36, 0);
-$color-2: #ff8800;
+$color-1: rgb(175, 82, 0);
+$color-2: #8d4b00;
 $color-alert: #FF0000;
 $color-back-alert: #FFE2D1;
 $color-alert-dark: #943500;
@@ -348,7 +348,10 @@ section,
     }
 
   }
-
+  svg {
+    fill: black;
+    width: 12px;
+  }
 }
 
 .btn-simple {
@@ -381,6 +384,49 @@ section,
       color: $white;
     }
 
+  }
+}
+
+
+.dynamicswitch {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-around;
+  background-color: $grey-back;
+  border-radius: 3px;
+  padding: 5px;
+  gap: 5px;
+  margin-bottom: 10px;
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 100%;
+    border-radius: 3px;
+    justify-content: center;
+    transition: 200ms ease-in-out;
+    color: white;
+
+    &.active {
+      background-color: $dark;
+      color: white;
+      transition: 200ms ease-in-out;
+    }
+
+    &:hover {
+      background-color: $color-1;
+      color: white;
+      transition: 200ms ease-in-out;
+    }
+
+    cursor: pointer;
   }
 }
 
@@ -442,7 +488,6 @@ section,
 
 .btn-front {
   background: $color-1;
-  border-radius: 50px;
   display: flex;
   padding: 7px 15px;
   justify-content: center;
@@ -454,7 +499,7 @@ section,
   overflow: hidden;
 
   &.spe {
-    background: $color-2;
+    background: $color-1;
     padding: 5px 5px 5px 15px;
 
     span {
@@ -463,13 +508,12 @@ section,
       height: 100%;
       left: -20px;
       transform: skew(20deg);
-      background: $color-1;
+      background: $blackL;
       transition: 150ms ease-in-out;
     }
 
     .icon {
       padding: 5px;
-      border-radius: 50px;
       background-color: white;
       width: 30px;
       height: 30px;
@@ -487,7 +531,7 @@ section,
       transition: 150ms ease-in-out;
 
       span {
-        background-color: $dark;
+        background-color: $blackL;
         left: -10px;
         width: 150%;
         transition: 150ms ease-in-out;
@@ -675,5 +719,34 @@ section,
 
   100% {
     right: 30%;
+  }
+}
+
+.step-indicator {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  flex: 1;
+
+  svg {
+    width: 12px;
+  }
+
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+
+    p {
+      color: $grey-writted;
+    }
+
+    &.active {
+      p {
+        color: $dark;
+      }
+    }
   }
 }

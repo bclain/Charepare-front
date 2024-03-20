@@ -3,13 +3,13 @@ import { useAuth } from '../contexts/AuthContext';
 import { useModal } from '../contexts/ModalContext';
 import { useNavigate } from 'react-router-dom';
 
-const LoginForm = () => {
+const LoginForm = ({ send, action }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login,userRole, isAuthenticated } = useAuth();
-    const { closeModal } = useModal();
+    const { login, userRole, isAuthenticated, connectErr } = useAuth();
+    const { closeModal,openModal } = useModal();
     const navigate = useNavigate();
-    
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -19,7 +19,15 @@ const LoginForm = () => {
             // Gérer les erreurs de connexion ici
         }
     };
-    
+
+    const handleOpenLogin = () => {
+        openModal('register');
+    };
+
+    const handleOpenLost = () => {
+        openModal('lost');
+    };
+
     useEffect(() => {
         if (isAuthenticated()) {
             closeModal();
@@ -31,8 +39,9 @@ const LoginForm = () => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h3>Connexion</h3>
+        <form className='login'>
+            {!send &&
+                <h3>Connexion</h3>}
             <div className="form-group">
 
                 <label htmlFor="email">Adress email</label>
@@ -55,12 +64,15 @@ const LoginForm = () => {
                     placeholder="Mot de passe"
                 />
             </div>
-
-            <div className="btns">
-                <button className="btn-pro scnd " type='button' onClick={closeModal}> <p>Retour</p></button>
-                <button className='btn-pro' type="submit"><p>Se connecter</p></button>
-
+            <div className="form-group">
+            {connectErr && <p className="bigerror">{connectErr}</p>}
             </div>
+                <div className="btns">
+                    {!send && <button className="btn-pro scnd " type='button' onClick={closeModal}><p>Retour</p></button>}
+                    <button className='btn-pro'type="button" onClick={handleSubmit}><p>Se connecter</p></button>
+
+                </div>
+                
 
         </form>
     );

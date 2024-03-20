@@ -1,0 +1,119 @@
+.prestations {
+    align-items: center;
+    button {
+        width: fit-content;
+        margin-left: 15px;
+        align-self: center;
+
+        svg {
+            width: 10px;
+            transition: 150ms;
+        }
+
+        &.open {
+            svg {
+                transform: rotate(180deg);
+                transition: 150ms;
+            }
+        }
+    }
+
+    &.small {
+        ul {
+            gap: 2px;
+            padding: 15px 15px 0px 15px;
+
+            .presta {
+                &.select {
+                    border: 1px solid $grey-border;
+
+                    &:hover {
+                        cursor: inherit;
+                    }
+                }
+            }
+        }
+    }
+
+    ul {
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+
+
+
+        .presta {
+            padding: 10px 20px;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            align-self: stretch;
+            display: flex;
+            background-color: white;
+            border-radius: 9px;
+            transition: 200ms ease-in-out;
+            border: $grey-border 1px solid;
+
+            svg {
+                width: 0px;
+                transition: 150ms ease-in-out;
+            }
+
+            .nom {
+                align-self: stretch;
+                display: flex;
+                flex: 1 0;
+                align-content: center;
+                align-items: center;
+                font-size: 16px;
+                gap: 10px;
+
+                p {
+                    font-size: 16px;
+                }
+
+                span {
+                    height: inherit;
+                    margin-left: 10px;
+                }
+            }
+
+            .temps {
+                color: $grey-writted;
+            }
+
+            &.select {
+                border: $color-1 1px solid;
+
+                &:hover {
+
+                    cursor: inherit;
+
+                }
+            }
+
+            &:hover {
+                cursor: pointer;
+                border: $color-1 1px solid;
+
+                svg {
+                    width: 9px;
+                    transition: 150ms ease-in-out;
+                }
+            }
+        }
+
+        .titre {
+            padding: 5px 10px;
+            border-radius: 9px;
+            gap: 10px;
+            align-self: stretch;
+            align-items: center;
+            display: flex;
+            transition: 200ms ease-in-out;
+        }
+    }
+}

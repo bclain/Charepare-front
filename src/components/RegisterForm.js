@@ -1,47 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useModal } from '../contexts/ModalContext';
 import AddressAuto from './AddressAuto';
+import DOMPurify from 'dompurify';
+import validator from 'validator';
 
-const RegisterForm = () => {
+const RegisterForm = ({ send, customInfos, action, type }) => {
 
     const [formState, setFormState] = useState({
         email: '',
         password: '',
         confirmPassword: '',
         nom: '',
-        adresse: '',
         prenom: '',
         adresse: '',
         telephone: '',
         accepteConditions: false
     });
 
+    useEffect(() => {
+        const nInfos = formState
+        if (customInfos) {
+            if (customInfos.email) {
+                nInfos.email = customInfos.email
+            }
+            if (customInfos.nom) {
+                nInfos.nom = customInfos.nom
+            }
+            if (customInfos.prenom) {
+                nInfos.prenom = customInfos.prenom
+            }
+            if (customInfos.adresse) {
+                nInfos.adresse = customInfos.adresse
+            }
+            if (customInfos.telephone) {
+                nInfos.telephone = customInfos.telephone
+            }
+
+        }
+    }, [customInfos]);
+
     const { register } = useAuth();
     const { closeModal } = useModal();
     const [errors, setErrors] = useState({});
-    
-    const handleInputChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormState({
-            ...formState,
-            [name]: type === 'checkbox' ? checked : value
-        });
-    };
+
 
     const validateFields = () => {
         let newErrors = {};
         let isValid = true;
 
-        // Email validation
+        // Email validation et sanitation
         if (!formState.email) {
             newErrors.email = "L'email est requis.";
             isValid = false;
-        } else if (!/\S+@\S+\.\S+/.test(formState.email)) {
+        } else if (!validator.isEmail(formState.email)) {
             newErrors.email = "L'adresse email est invalide.";
             isValid = false;
+        } else {
+            formState.email = validator.normalizeEmail(formState.email);
         }
 
+        // Password validation
         if (!formState.password) {
             newErrors.password = "Le mot de passe est requis.";
             isValid = false;
@@ -65,32 +84,32 @@ const RegisterForm = () => {
                 isValid = false;
             }
         }
-        if (formState.password !== formState.confirmPassword) {
-            newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
-            isValid = false;
-        }
 
-        // Nom validation
-        if (!formState.nom) {
-            newErrors.nom = "Le nom est requis.";
-            isValid = false;
-        }
+        // Nom et Prénom sanitation (simple exemple, peut être étendu/adapté)
+        ['nom', 'prenom'].forEach(field => {
+            if (!formState[field]) {
+                newErrors[field] = `Le ${field} est requis.`;
+                isValid = false;
+            } else {
+                formState[field] = validator.escape(formState[field]);
+            }
+        });
 
-        // Prénom validation
-        if (!formState.prenom) {
-            newErrors.prenom = "Le prénom est requis.";
-            isValid = false;
-        }
-
-        // Adresse validation
-        if (!formState.adresse) {
+        // Adresse sanitation
+        if (!formState.adresse && type === 1) {
             newErrors.adresse = "L'adresse est requise.";
             isValid = false;
+        } else {
+            formState.adresse = formState.adresse;
         }
+
 
         // Téléphone validation
         if (!formState.telephone) {
             newErrors.telephone = "Le numéro de téléphone est requis.";
+            isValid = false;
+        } else if (!validator.isMobilePhone(formState.telephone, 'any', { strictMode: false })) {
+            newErrors.telephone = "Le numéro de téléphone est invalide.";
             isValid = false;
         }
 
@@ -103,6 +122,23 @@ const RegisterForm = () => {
         setErrors(newErrors);
         return isValid;
     };
+    // ...
+
+    const sanitizeInput = (input) => {
+        const sanitizedInput = DOMPurify.sanitize(input);
+        return sanitizedInput;
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        const sanitizedValue = sanitizeInput(value);
+        setFormState({
+            ...formState,
+            [name]: type === 'checkbox' ? checked : sanitizedValue
+        });
+    };
+
+    // ...
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -117,14 +153,21 @@ const RegisterForm = () => {
         }
     };
 
+    useEffect(() => {
+        if (action) {
+            handleSubmit();
+        }
+    }, [action]);
 
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h3>Inscription</h3>
-            <div className="form-group">
-                <label htmlFor="prenom">Prénom</label>
+        <form>
+            {!send &&
+                <h3>Inscription</h3>
+            }
+            <div className="form-group line">
+                <label htmlFor="prenom  line">Prénom</label>
                 <input
                     type="text"
                     className="inputs"
@@ -135,7 +178,7 @@ const RegisterForm = () => {
                 />
                 {errors.prenom && <p className="error">{errors.prenom}</p>}
             </div>
-            <div className="form-group">
+            <div className="form-group line">
                 <label htmlFor="nom">Nom</label>
                 <input
                     type="text"
@@ -171,19 +214,11 @@ const RegisterForm = () => {
                 />
                 {errors.telephone && <p className="error">{errors.telephone}</p>}
             </div>
-            <div className="form-group">
-                <label htmlFor="telephone">Adresse</label>
-                <input
-                    type="tel"
-                    className="inputs"
-                    name="adresse"
-                    value={formState.adresse}
-                    onChange={handleInputChange}
-                    placeholder="Adresse"
-                />
-                {errors.adresse && <p className="error">{errors.adresse}</p>}
-            </div>
-            <div className="form-group">
+
+            {type !== 1 &&
+                <AddressAuto err={errors.adresse ? errors.adresse : false} onAddressSelect={(address) => setFormState({ ...formState, adresse: address })} newSelect={formState.adresse} />
+            }
+            <div className="form-group line">
                 <label htmlFor="password">Mot de passe</label>
                 <input
                     type="password"
@@ -193,11 +228,11 @@ const RegisterForm = () => {
                     onChange={handleInputChange}
                     placeholder="Mot de passe"
                 />
-                <p className='desc'> ( Au moins 8 caractères, un chiffre et un cactère special )
+                <p className='desc'> ( Au moins 8 caractères, un chiffre et un caractère special )
                 </p>
                 {errors.password && <p className="error">{errors.password}</p>}
             </div>
-            <div className="form-group">
+            <div className="form-group line">
                 <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
                 <input
                     type="password"
@@ -223,8 +258,8 @@ const RegisterForm = () => {
             </div>
             {errors.accepteConditions && <p className="error">{errors.accepteConditions}</p>}
             <div className="btns">
-                <button className="btn-pro scnd "  type='button' onClick={closeModal}><p>Retour</p></button>
-                <button className='btn-pro' type="submit"><p>S'inscrire</p></button>
+                {!send && <button className="btn-pro scnd " type='button' onClick={closeModal}><p>Retour</p></button>}
+                <button className={type===1 ?'btn-pro full':'btn-pro' }   type="button" onClick={handleSubmit}><p>S'inscrire</p></button>
             </div>
         </form>
     );

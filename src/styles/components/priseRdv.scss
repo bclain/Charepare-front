@@ -1,0 +1,155 @@
+.priseRdv {
+    display: flex;
+    flex-direction: column;
+    gap: $small;
+    
+    margin-top: 1.5rem;
+    padding: 15px;
+    &.up{
+        background-color: rgba(0, 0, 0, 0.434);
+    }
+    &.resa{
+        .add {
+            overflow: hidden;
+            height: 0px;
+            padding: 0px;
+
+            &.open {
+                overflow: scroll;
+                height: 200px;
+                padding: 15px;
+            }
+        }
+    }
+       
+    
+
+    .connectsection {
+        border-radius: 3px;
+        border: 1px solid $grey-border;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        padding: 15px;
+
+
+        .form,
+        form {
+            label {
+                font-size: 14px;
+                color: white;
+            }
+
+            .check {
+                label {
+                    color: white;
+                }
+            }
+
+            .btns {
+                margin-top: 15px;
+                display: flex;
+                justify-content: center;
+
+                .btn-pro {
+                    width: 100%;
+                    margin: 0px;
+                }
+            }
+        }
+
+        .login {
+            .form-group {
+                grid-column: span 1;
+            }
+        }
+    }
+
+    .btn-front {
+        width: fit-content;
+        margin: auto;
+
+        &.inactive {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+    }
+
+    .itemresa {
+        &.small {
+            h4 {
+                opacity: .5;
+            }
+
+        }
+    }
+
+    .confirmation {
+
+
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        width: 100%;
+
+        p {
+            font-size: 16px;
+        }
+
+        .illu {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border: $color-2 1px solid;
+            padding: 15px;
+            width: fit-content;
+            border-radius: 9px;
+
+            &.alert {
+                border: $color-alert 1px solid;
+            }
+
+            svg {
+                width: 70px;
+                max-width: 70px;
+            }
+
+            .txt {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                p {
+                    font-size: 18px;
+                    overflow: hidden;
+                    /* Masque le texte qui déborde */
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+
+        .infos {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+
+            .grp {
+                flex-wrap: nowrap;
+                width: fit-content;
+                text-align: center;
+            }
+        }
+
+        .grp {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+    }
+}

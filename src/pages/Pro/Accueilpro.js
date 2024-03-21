@@ -46,20 +46,16 @@ const Accueilpro = () => {
                   
                     <div className='disp'>
                         <div className='list'>
-                            <h3>À confirmer</h3>
+                            <h3>En cours</h3>
+                            <RdvList typeList={"encours"}></RdvList>
+                        </div>
+                        <div className='list'>
+                            <h3>Nouveaux</h3>
                             <RdvList typeList={"nouveaux"}></RdvList>
                         </div>
                         <div className='list'>
-                            <h3>Aujourd'hui</h3>
+                            <h3>Global</h3>
                             <RdvList typeList={""}></RdvList>
-                        </div>
-                        <div className='list'>
-                            <div className='end'>
-                                <h3>En cours</h3>
-                                 <RdvDisp type={"action"} iopen={true} idrdv={3} />
-
-                               
-                            </div>
                         </div>
                     </div>
 

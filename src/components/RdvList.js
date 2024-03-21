@@ -18,7 +18,7 @@ const RdvList = ({ typeList, idpers }) => {
 
     const instanceId = useRef(instanceCounter++).current;
     let url = false
-    url = typeList === "nouveaux" ? "confirm=false" : null;
+    url = typeList === "nouveaux" ? "rendezvous/nonconfirme" : typeList === "encours" ? "rendezvous/encours" :  "rendezvous";
 
     let load = false;
     const [loadedCount, setLoadedCount] = useState([]); // ou utiliser un Set si vous préférez
@@ -29,13 +29,14 @@ const RdvList = ({ typeList, idpers }) => {
     const [sendReload, setSendReload] = useState(false);
     const [dates, setDates] = useState({ startIsoDate: '', endIsoDate: '' });
 
-    const { data: rdvsdata, loading: rdvsloading } = useFetch(`/rendezvous?startDate=${startDay}&lazy=true&${url}`, 'GET', null, true, dataSend);
+    const { data: rdvsdata, loading: rdvsloading } = useFetch(`/${url}`, 'GET', null, true, dataSend);
     const { data: rdvsupdate, loading: rdvupdateoading } = useFetch(`/rendezvous?startDate=${dates.startIsoDate}&endDate=${dates.endIsoDate}`, 'GET', null, true, sendReload);
 
     useEffect(() => {
         if (!rdvsdata) return; // Si aucune donnée n'est disponible, ne faites rien
         // Aplatir le tableau de tableaux en un seul tableau
-        const transformedRdvsData = rdvsdata.map(rdv => ({
+        console.log(rdvsdata);
+        const transformedRdvsData = rdvsdata.data.map(rdv => ({
             ...rdv, // on conserve toutes les autres propriétés de l'objet rdv sans changement
             date: rdv.dateHeureDebut, // on renomme dateHeureDebut en date
             datefin: rdv.dateHeureFin // on renomme dateHeureFin en datefin
@@ -135,54 +136,6 @@ useEffect(() => {
             return updatedLoaded;
         });
     };
-
-    // useEffect(() => {
-    //     if (!rdvsupdate) return; // Si aucune mise à jour n'est disponible, ne faites rien
-
-    //     // Convertir l'état actuel (groupedRdv) en une structure facile à manipuler
-    //     const currentRdvByDate = groupedRdv.reduce((acc, [date, rdvs]) => {
-    //         acc[date] = rdvs.reduce((rdvMap, rdv) => {
-    //             rdvMap[rdv.id] = rdv;
-    //             return rdvMap;
-    //         }, {});
-    //         return acc;
-    //     }, {});
-
-    //     const updatedRdvs = {}; // Stocker les rdvs mis à jour ou ajoutés
-    //     const idsToUpdate = new Set(rdvsupdate.map(rdv => rdv.id)); // Identifiants des rdvs reçus dans la mise à jour
-
-    //     // Éliminer les rdvs qui ne sont plus valides (supprimés ou modifiés)
-    //     Object.keys(currentRdvByDate).forEach(date => {
-    //         // Assurez-vous que vous travaillez avec un tableau
-    //         const rdvsArray = Object.values(currentRdvByDate[date]);
-
-    //         // Filtrer le tableau pour éliminer les rdvs supprimés
-    //         const filteredRdvs = rdvsArray.filter(rdv => idsToUpdate.has(rdv.id));
-
-    //         // Ensuite, vous devez reconstruire la structure avec les rdvs mis à jour pour cette date
-    //         currentRdvByDate[date] = filteredRdvs.reduce((acc, rdv) => {
-    //             acc[rdv.id] = rdv;
-    //             return acc;
-    //         }, {});
-
-    //         // Incorporer les mises à jour
-    //         if (updatedRdvs[date]) {
-    //             currentRdvByDate[date] = { ...currentRdvByDate[date], ...updatedRdvs[date] };
-    //         }
-    //     });
-
-    //     console.log("currentRdvByDate", currentRdvByDate);
-    //     const filteredRdvByDate = Object.entries(currentRdvByDate)
-    //         .filter(([date, rdvsMap]) => Object.keys(rdvsMap).length > 0) // On garde seulement les jours avec des rdvs
-    //         .map(([date, rdvsMap]) => [date, Object.values(rdvsMap)]); // Convertir les rdvs en tableau de valeurs
-
-    //     // Convertir la structure à jour en format attendu par groupedRdv
-    //     const updatedGroupedRdv = Object.entries(filteredRdvByDate).map(([date, rdvsMap]) => [date, Object.values(rdvsMap)]);
-
-    //     // Mettre à jour l'état avec les nouvelles données
-    //     setGroupedRdv(filteredRdvByDate);
-    //     setSendReload(false); // Réinitialiser le déclencheur de rechargement
-    // }, [rdvsupdate]);
 
     useEffect(() => {
         const totalRdvs = groupedRdv.reduce((acc, [, rdvs]) => acc + rdvs.length, 0); // N 

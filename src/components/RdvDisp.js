@@ -49,17 +49,18 @@ const prestationsCoiffeur = [
     // autres prestations...
 ];
 
-const RdvDisp = ({ type, iopen, idrdv, bRdv}) => {
+const RdvDisp = ({ type, iopen, idrdv, bRdv }) => {
     const [sendSubmitRdv, setSendSubmitRdv] = useState(false);
-    const confirmbody = [{confirm: 'true'}];
-    const [sendConfirm, setSendConfirm] = useState(false);  
+    const confirmbody = [{ confirm: 'true' }];
+    const [sendConfirm, setSendConfirm] = useState(false);
     const { data: rdvsdata, loading: rdvsloading, error } = useFetch(`/rendezvous/${idrdv}`, 'GET', null, true, sendSubmitRdv);
-    const { data: nConfirm, loading: lConfirm, error : eComfirm } = useFetch(`/rendezvous/${idrdv}`, 'PUT', confirmbody, true, sendConfirm);
-   
+    const { data: nConfirm, loading: lConfirm, error: eComfirm } = useFetch(`/rendezvous/${idrdv}`, 'PUT', confirmbody, true, sendConfirm);
+
     let className = "rdvdisp " + type;
+
     const [open, setOpen] = useState(iopen);
     const [rdv, setRdv] = useState(null);
-    const [termin, setTermin] = useState(false);
+    const [etat, setEtat] = useState("");
     const [prestationsDuRdv, setPrestationsDuRdv] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     // Créer une nouvelle instance de Date pour la date actuelle
@@ -67,40 +68,54 @@ const RdvDisp = ({ type, iopen, idrdv, bRdv}) => {
     today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour la comparaison de date uniquement
 
 
-
     useEffect(() => {
-        if (idrdv ) {
-            console.log("idrdv", idrdv);        
+        if (idrdv) {
+            console.log("idrdv", idrdv);
             setSendSubmitRdv(true);
         }
         else if (bRdv) {
             console.log("bRdv", bRdv);
             setRdv(bRdv);
-        }   
+        }
     }, [idrdv, bRdv]);
 
     useEffect(() => {
-        if (rdvsdata && rdvsdata.dateHeureDebut) {
-            console.log("rdvData", rdvsdata.dateHeureDebut);
-            const debut = parseISO(rdvsdata.dateHeureDebut);   
-            const fin = parseISO(rdvsdata.dateHeureFin); 
+        if (rdvsdata && rdvsdata.data && rdvsdata.data.dateHeureDebut) {
+            console.log("rdvData", rdvsdata.data.dateHeureDebut);
+            const debut = parseISO(rdvsdata.data.dateHeureDebut);
+            const fin = parseISO(rdvsdata.data.dateHeureFin);
             // Adaptez cette partie en fonction de la structure de vos données
             const rdvData = {
-                ...rdvsdata,
-                id: rdvsdata.id,
-                debut: format(parseISO(rdvsdata.dateHeureDebut), 'HH:mm', { locale: fr }),
-                fin: format(parseISO(rdvsdata.dateHeureFin), 'HH:mm', { locale: fr }),
-                dateForm: format(parseISO(rdvsdata.dateHeureDebut), 'dd/MM/yyyy', { locale: fr }),
+                ...rdvsdata.data,
+                voiture: rdvsdata.data.voiture,
+                id: rdvsdata.data.id,
+                debut: format(parseISO(rdvsdata.data.dateHeureDebut), 'HH:mm', { locale: fr }),
+                fin: format(parseISO(rdvsdata.data.dateHeureFin), 'HH:mm', { locale: fr }),
+                dateForm: format(parseISO(rdvsdata.data.dateHeureDebut), 'dd/MM/yyyy', { locale: fr }),
             };
+            if (rdvsdata.data.id_Statut == 1) {
+                setEtat("confirm");
+            }
+            else if (rdvsdata.data.id_Statut == 2) {
+                setEtat("aconfirmer");
+            }
+            else if (rdvsdata.data.id_Statut == 3) {
+                setEtat("En cours");
+            }
+            else if (rdvsdata.data.id_Statut == 4) {
+                setEtat("Terminé");
+            }
             console.log("rdvData", rdvData);
             setRdv(rdvData);// Vous pouvez passer des informations supplémentaires si nécessaire
+            let servicesObj = JSON.parse(rdvsdata.data.services);
+            setPrestationsDuRdv(servicesObj);
             setSendSubmitRdv(false);
         }
-        
+
     }, [rdvsdata]);
 
     return (
-        <div className={rdv && rdv.confirme ? className : className + " aconfirm"}>
+        <div className={rdv && rdv.id_Statut != 2 ? className : className + " aconfirm"}>
             {rdv && rdv.id != idrdv ?
                 <div>
                     <p className='nouv'></p>
@@ -186,13 +201,13 @@ const RdvDisp = ({ type, iopen, idrdv, bRdv}) => {
                             <div className='infos'>
                                 <div className='name'>
                                     <div className='grp clientn'>
-                                        <p className='desc'>Prénom:</p>
-                                        <p>{rdv.prenom}</p>
+                                        <p className='desc'>Marque:</p>
+                                        <p>{rdv.voiture.marque}</p>
                                     </div>
                                     <span className='verti'></span>
                                     <div className='grp clientn '>
-                                        <p className='desc'>Nom:</p>
-                                        <p>{rdv.nomFamille}</p>
+                                        <p className='desc'>Voiture:</p>
+                                        <p>{rdv.voiture.modele}</p>
                                     </div>
                                     <div className='grp presta'>
                                         <p className='desc'>Prestataire:</p>
@@ -203,47 +218,46 @@ const RdvDisp = ({ type, iopen, idrdv, bRdv}) => {
 
                                     <div key={prestation.id_prestation} className="prestar">
                                         <p>{prestation.titre}</p>
-                                        <p className='strong'>{prestation.prix}</p>
+                                        <p className='strong'>{prestation.prix}$</p>
 
                                     </div>
                                 ))}
                                 <span className='op clientn' />
                                 <div className='grp op clientn'>
                                     <p className='desc'>Adresse:</p>
-                                    <p className='strong'>{rdv.adresse}</p>
+                                    <p className='strong'>{rdv.voiture.client.adresse}</p>
                                 </div>
                                 <span className='op clientn' />
                                 <div className='grp op clientn'>
                                     <p className='desc'>Email:</p>
-                                    <p className='strong'>{rdv.email}</p>
+                                    <p className='strong'>{rdv.voiture.client.email}</p>
                                 </div>
                                 <div className='grp op clientn'>
                                     <p className='desc'>Téléphone:</p>
-                                    <p className='strong'>{rdv.numero}</p>
+                                    <p className='strong'>{rdv.voiture.client.telephone}</p>
                                 </div>
                             </div>
-                            {type !== 'action' && (
-                             !termin  ?
+                            { etat === "aconfirmer" &&
                                 <div className="actions">
                                     <a href="confirm " className='btn-simple danger'> <p>Annuler</p> </a>
-                                    {rdv.confirme ?
-                                        null
-                                        : <a href="confirm" className='btn-simple confirrm'> <p>Confirmer</p> </a>
-                                    }
-                                </div>
-                                :
-
+                                    <a href="confirm" className='btn-simple confirrm'> <p>Confirmer</p> </a>
+                                </div>}
+                            { etat === "confirm" &&
                                 <div className="actions">
+                                    <a href="confirm " className='btn-simple danger'> <p>Annuler</p> </a>
+                                    <a href="confirm" className='btn-simple confirrm'> <p>Confirmer</p> </a>
+                                </div>}
 
-                                    <div>
-                                        {rdv.id &&
-                                            <Link className='btn-simple' to={`/pro/facture/${rdv.id}`}><p>Voir la Facture</p></Link>
-                                        }
+                            <div className="actions">
 
-                                    </div>
+                                <div>
+                                     { etat === "Terminé" &&
+                                        <Link className='btn-simple' to={`/pro/facture/${rdv.id}`}><p>Voir la Facture</p></Link>
+                                    }
+
                                 </div>
-                           ) }
-                            {type === 'action' &&
+                            </div>
+                            { etat === "En cours" &&
                                 <div className="actionplus">
                                     <a href="confirm" className='btn-simple'> <p>Appeler le client</p> </a>
                                     <a href="confirm" className='btn-simple'> <p>Rendez-vous bientôt terminé</p> </a>

@@ -47,7 +47,7 @@ $dark: #111317;
 $light: #b5b9b9;
 $color-1: rgb(175, 82, 0);
 $color-2: #8d4b00;
-$color-alert: #FF0000;
+$color-alert: #fe6a00;
 $color-back-alert: #FFE2D1;
 $color-alert-dark: #943500;
 $color-back-success: #92FFB1;
@@ -646,7 +646,7 @@ section,
 
   a {
     color: $grey-border;
-    background: white;
+    background: transparent;
     font-size: 16px;
     padding-left: 5px;
 

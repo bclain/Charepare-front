@@ -12,25 +12,30 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { useAuth } from '../../contexts/AuthContext';
 import Loader from '../../components/Loader';
+import  NotifPage from '../../components/NotifPage';
 
 const Agenda = () => {
-    //const { userId } = useAuth();
+    const { userId } = useAuth();
     const [sendSubmit, setSendSubmit] = useState(true);
     const [idDispo, setIdDispo] = useState(true);
-
+    const [sendDate, setSendDate] = useState(false);
     const [dispos, setDispo] = useState([
-      
+
     ]);
 
-   // const { data, loading, error } = useFetch(`/horaires/?filters[pro][$eq]=${userId}&populate=*`, 'GET', null, true, sendSubmit);
+    const [rdvs, setRdvs] = useState([
 
-    // useEffect(() => {
-    //     if(data){
-    //         setIdDispo(data[0].id);
-    //         setDispo(data[0].attributes.details);
-    //     } 
-    //     setSendSubmit(false);
-    // }, [data]);
+    ]);
+
+    const { data, loading, error } = useFetch(`/pageGarages/1`, 'Get', null, true, true);
+
+    useEffect(() => {
+        if (data) {
+            setIdDispo(data.id);
+            setDispo(data.horaires);
+        }
+        setSendSubmit(false);
+    }, [data]);
 
     const [dates, setDates] = useState({ startDate: null, endDate: null });
     const [activeItem, setActiveItem] = useState('agenda');
@@ -50,18 +55,18 @@ const Agenda = () => {
     const [newActiveItem, setNewActiveItem] = useState(null);
     const [confirmNeed, setConfirmNeed] = useState(null);
 
-    const[selectedRdv, setSelectedRdv] = useState(1);
+    const [selectedRdv, setSelectedRdv] = useState(null);
 
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
         const path = location.pathname.split('/')[3];
-        if(path) setActiveItem(path);
+        if (path) setActiveItem(path);
     }, [location]);
 
     const handleSetActiveItem = (newItem) => {
-        if(confirmNeed) {
+        if (confirmNeed) {
             setNewActiveItem(newItem);
         } else {
             setActiveItem(newItem);
@@ -78,7 +83,6 @@ const Agenda = () => {
     // Fonction pour gérer les nouvelles horaires
     const handleNewHoraires = (nouvellesHoraires) => {
         if (nouvellesHoraires) {
-
             setNewdatadispo(nouvellesHoraires);
         }
         else {
@@ -87,361 +91,52 @@ const Agenda = () => {
         }
     };
 
-    useEffect(() => {
-        console.log(newdatadispo)
-    }, [newdatadispo]);
-
-
     const handleDateChange = (start, end) => {
 
         if (start && end) {
-            setDates({ startDate: start, endDate: end });
+            setDates({ startDate: start, endDate: end, startIsoDate: start.toISOString(), endIsoDate: end.toISOString() });
+            console.log(start.toISOString(), end.toISOString());
             setChargementCal(true);
         }
         // Ici, convertissez start et end en tableau de jours si nécessaire
     };
 
+    const { data: rdvsdata, loading: rdvsloading } = useFetch(`/rendezvous`, 'GET', null, true, sendDate);
+
+    useEffect(() => {
+        if (dates.startIsoDate && dates.endIsoDate) {
+            // Appel de useFetch ici assure que startIsoDate et endIsoDate sont à jour
+            setSendDate(true);
+        }
+    }, [dates.startIsoDate, dates.endIsoDate]);
+
+    useEffect(() => {
+        if (rdvsdata && rdvsdata.data && rdvsdata.data.length > 0) {
+            console.log("rdvvvv", rdvsdata);
+            // Appel de useFetch ici assure que startIsoDate et endIsoDate sont à jour
 
 
-    const rdvs = [
-        {
-            id: 1,
-            idClient: 3,
-            idcoiffeur: 19,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 8, 23),
-            debut: '15:00',
-            fin: '19:30',
-            prenom: 'Claire',
-            nomFamille: 'Bernard',
-            id_prestation: [102, 104, 103],
-            adresse: '789 Boulevard Saint-Germain, 75007 Paris',
-            email: 'claire.bernard@example.com',
-            numero: '06 98 76 54 32',
-            confirme: 1
-        },
-        {
-            id: 2,
-            idClient: 2,
-            idcoiffeur: 11,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 5, 9),
-            debut: '9:00',
-            fin: '19:30',
-            prenom: 'Bob',
-            nomFamille: 'Martin',
-            id_prestation: [105],
-            adresse: '456 Avenue de la Republique, 75011 Paris',
-            email: 'bob.martin@example.com',
-            numero: '07 23 45 67 89',
-            confirme: 1
-        },
-        {
-            id: 3,
-            idClient: 3,
-            idcoiffeur: 3,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 3, 8),
-            debut: '17:00',
-            fin: '18:30',
-            prenom: 'Claire',
-            nomFamille: 'Bernard',
-            id_prestation: [104, 103],
-            adresse: '789 Boulevard Saint-Germain, 75007 Paris',
-            email: 'claire.bernard@example.com',
-            numero: '06 98 76 54 32',
-            confirme: 1
-        },
-        {
-            id: 4,
-            idClient: 3,
-            idcoiffeur: 17,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 0, 1),
-            debut: '15:00',
-            fin: '20:30',
-            prenom: 'Claire',
-            nomFamille: 'Bernard',
-            id_prestation: [104, 101, 102],
-            adresse: '789 Boulevard Saint-Germain, 75007 Paris',
-            email: 'claire.bernard@example.com',
-            numero: '06 98 76 54 32',
-            confirme: 1
-        },
-        {
-            id: 5,
-            idClient: 1,
-            idcoiffeur: 19,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 9, 25),
-            debut: '17:00',
-            fin: '20:30',
-            prenom: 'Alice',
-            nomFamille: 'Dupont',
-            id_prestation: [106, 105, 103],
-            adresse: '123 Rue de Paris, 75001 Paris',
-            email: 'alice.dupont@example.com',
-            numero: '06 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 6,
-            idClient: 1,
-            idcoiffeur: 12,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 1, 28),
-            debut: '9:00',
-            fin: '19:30',
-            prenom: 'Alice',
-            nomFamille: 'Dupont',
-            id_prestation: [106, 104, 105],
-            adresse: '123 Rue de Paris, 75001 Paris',
-            email: 'alice.dupont@example.com',
-            numero: '06 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 7,
-            idClient: 3,
-            idcoiffeur: 18,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 9, 12),
-            debut: '14:00',
-            fin: '19:30',
-            prenom: 'Claire',
-            nomFamille: 'Bernard',
-            id_prestation: [104, 105, 102],
-            adresse: '789 Boulevard Saint-Germain, 75007 Paris',
-            email: 'claire.bernard@example.com',
-            numero: '06 98 76 54 32',
-            confirme: 1
-        },
-        {
-            id: 8,
-            idClient: 1,
-            idcoiffeur: 4,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 2, 14),
-            debut: '12:00',
-            fin: '18:30',
-            prenom: 'Alice',
-            nomFamille: 'Dupont',
-            id_prestation: [101],
-            adresse: '123 Rue de Paris, 75001 Paris',
-            email: 'alice.dupont@example.com',
-            numero: '06 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 9,
-            idClient: 4,
-            idcoiffeur: 5,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 8, 20),
-            debut: '8:00',
-            fin: '19:30',
-            prenom: 'David',
-            nomFamille: 'Petit',
-            id_prestation: [106, 101, 104],
-            adresse: '101 Rue du Bac, 75007 Paris',
-            email: 'david.petit@example.com',
-            numero: '07 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 10,
-            idClient: 1,
-            idcoiffeur: 13,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2023, 11, 24),
-            debut: '17:00',
-            fin: '20:30',
-            prenom: 'Alice',
-            nomFamille: 'Dupont',
-            id_prestation: [106, 105, 103],
-            adresse: '123 Rue de Paris, 75001 Paris',
-            email: 'alice.dupont@example.com',
-            numero: '06 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 11,
-            idClient: 1,
-            idcoiffeur: 15,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 5),
-            debut: '10:00',
-            fin: '14:30',
-            prenom: 'Alice',
-            nomFamille: 'Dupont',
-            id_prestation: [101, 102],
-            adresse: '123 Rue de Paris, 75001 Paris',
-            email: 'alice.dupont@example.com',
-            numero: '06 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 12,
-            idClient: 4,
-            idcoiffeur: 20,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 20),
-            debut: '11:00',
-            fin: '15:30',
-            prenom: 'David',
-            nomFamille: 'Petit',
-            id_prestation: [103, 104],
-            adresse: '101 Rue du Bac, 75007 Paris',
-            email: 'david.petit@example.com',
-            numero: '07 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 13,
-            idClient: 2,
-            idcoiffeur: 18,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 15),
-            debut: '9:00',
-            fin: '12:30',
-            prenom: 'Bob',
-            nomFamille: 'Martin',
-            id_prestation: [105, 106],
-            adresse: '456 Avenue de la Republique, 75011 Paris',
-            email: 'bob.martin@example.com',
-            numero: '07 23 45 67 89',
-            confirme: 1
-        },
-        {
-            id: 14,
-            idClient: 3,
-            idcoiffeur: 14,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 10),
-            debut: '13:00',
-            fin: '16:30',
-            prenom: 'Claire',
-            nomFamille: 'Bernard',
-            id_prestation: [101, 103],
-            adresse: '789 Boulevard Saint-Germain, 75007 Paris',
-            email: 'claire.bernard@example.com',
-            numero: '06 98 76 54 32',
-            confirme: 1
-        },
-        {
-            id: 15,
-            idClient: 1,
-            idcoiffeur: 16,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 22),
-            debut: '14:00',
-            fin: '17:30',
-            prenom: 'Alice',
-            nomFamille: 'Dupont',
-            id_prestation: [102, 104],
-            adresse: '123 Rue de Paris, 75001 Paris',
-            email: 'alice.dupont@example.com',
-            numero: '06 12 34 56 78',
-            confirme: 0
-        },
-        {
-            id: 16,
-            idClient: 2,
-            idcoiffeur: 12,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 18),
-            debut: '8:00',
-            fin: '11:30',
-            prenom: 'Bob',
-            nomFamille: 'Martin',
-            id_prestation: [105, 106],
-            adresse: '456 Avenue de la Republique, 75011 Paris',
-            email: 'bob.martin@example.com',
-            numero: '07 23 45 67 89',
-            confirme: 1
-        },
-        {
-            id: 17,
-            idClient: 3,
-            idcoiffeur: 13,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 24),
-            debut: '12:00',
-            fin: '15:30',
-            prenom: 'Claire',
-            nomFamille: 'Bernard',
-            id_prestation: [102, 103],
-            adresse: '789 Boulevard Saint-Germain, 75007 Paris',
-            email: 'claire.bernard@example.com',
-            numero: '06 98 76 54 32',
-            confirme: 0
-        },
-        {
-            id: 18,
-            idClient: 4,
-            idcoiffeur: 17,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 29),
-            debut: '15:00',
-            fin: '18:30',
-            prenom: 'David',
-            nomFamille: 'Petit',
-            id_prestation: [101, 105],
-            adresse: '101 Rue du Bac, 75007 Paris',
-            email: 'david.petit@example.com',
-            numero: '07 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 19,
-            idClient: 1,
-            idcoiffeur: 10,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 12),
-            debut: '9:00',
-            fin: '12:30',
-            prenom: 'Alice',
-            nomFamille: 'Dupont',
-            id_prestation: [103, 104],
-            adresse: '123 Rue de Paris, 75001 Paris',
-            email: 'alice.dupont@example.com',
-            numero: '06 12 34 56 78',
-            confirme: 1
-        },
-        {
-            id: 20,
-            idClient: 2,
-            idcoiffeur: 11,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 3),
-            debut: '10:00',
-            fin: '13:30',
-            prenom: 'Bob',
-            nomFamille: 'Martin',
-            id_prestation: [102, 106],
-            adresse: '456 Avenue de la Republique, 75011 Paris',
-            email: 'bob.martin@example.com',
-            numero: '07 23 45 67 89',
-            confirme: 1
-        },
-        {
-            id: 21,
-            idClient: 2,
-            idcoiffeur: 12,
-            nomcoiffeur: 'Jean coiffure',
-            date: new Date(2024, 0, 18),
-            debut: '12:00',
-            fin: '13:30',
-            prenom: 'Bob',
-            nomFamille: 'Martin',
-            id_prestation: [105, 106],
-            adresse: '456 Avenue de la Republique, 75011 Paris',
-            email: 'bob.martin@example.com',
-            numero: '07 23 45 67 89',
-            confirme: 1
-        },
-    
-    ];
+            const nrdvs = rdvsdata.data.map((rdv, index) => {
+                const dateDebut = new Date(rdv.dateHeureDebut);
+                const dateFin = new Date(rdv.dateHeureFin);
+
+                return {
+                    id: rdv.id,
+                    voiture: `${rdv.voiture.marque} ${rdv.voiture.modele}`, // Concatenate marque and modele with a space in between
+                    confirme: rdv.id_Statut != 2 ? true : false, // Les IDs commencent à 1 et s'incrémentent
+                    date: new Date(dateDebut.getFullYear(), dateDebut.getMonth(), dateDebut.getDate()), // Crée une nouvelle Date sans les heures
+                    debut: `${dateDebut.getHours()}:${dateDebut.getMinutes().toString().padStart(2, '0')}`, // Format HH:mm pour l'heure de début en heure locale
+                    fin: `${dateFin.getHours()}:${dateFin.getMinutes().toString().padStart(2, '0')}`, // Format HH:mm pour l'heure de fin en heure locale
+                };
+            });
+            setRdvs(nrdvs);
+
+        }
+        setSendDate(false);
+    }, [rdvsdata]);
+
+
+
 
 
     const arrets = [
@@ -468,6 +163,8 @@ const Agenda = () => {
                     </div>
                 </div>
             </Modal>
+
+            <NotifPage/>
             <Leftmenu />
             <div className='content agenda'>
                 <Hearderpro titre="Agenda" />
@@ -475,36 +172,38 @@ const Agenda = () => {
 
 
                 {activeItem === 'agenda' && (
-                       dispos && dispos[0] ? 
-                    <div className='flex-h agen-sec'>
-                        <div className='left sep '>
-                            <Datepicker className="calendriercheck" onDateChange={handleDateChange} />
-                            {/* <span /> */}
-                            <RdvDisp type="normal" iopen={true} idrdv={selectedRdv} />
-                        </div>
-                        <div className='right'>                            
-                        {activeItem === 'agenda' && (
-                            <ListFiltre filters={filters} titre="Filtrer par:" direct="horizon" setFilter={setRdvFilter} />
-                            )}
-                            <Calendrier dispos={newdatadispo && activeItem === 'dispo' ? newdatadispo : dispos} rdvs={filteredRdvs} arrets={arrets} chargement={() => setChargementCal(false)} selectedDates={dates} disposdisp={activeItem === 'dispo' ? true : false} selectedRdv={setSelectedRdv} />
-                        </div>
-                    </div>:
-                    <Loader></Loader>
-                     
+                    dispos && dispos[0] && rdvs ?
+                        <div className='flex-h agen-sec'>
+                            <div className='left sep '>
+                                <Datepicker className="calendriercheck" onDateChange={handleDateChange} />
+                                {/* <span /> */}
+                                <RdvDisp type="normal" iopen={true} idrdv={selectedRdv} onLoaded={()=>null} onVisible={()=>null} />
+                            </div>
+                            <div className='right'>
+                                {activeItem === 'agenda' && (
+                                    <ListFiltre filters={filters} titre="Filtrer par:" direct="horizon" setFilter={setRdvFilter} />
+                                )}
+                                {!rdvsloading ? 
+                                <Calendrier dispos={newdatadispo && activeItem === 'dispo' ? newdatadispo : dispos} rdvs={filteredRdvs} arrets={arrets} chargement={() => setChargementCal(false)} selectedDates={dates} disposdisp={activeItem === 'dispo' ? true : false} selectedRdv={setSelectedRdv} />
+                                : <Loader></Loader>}
+                                </div>
+                        </div> :
+                        <Loader></Loader>
+
                 )}
 
                 {activeItem === 'dispo' && (
-                        dispos && dispos[0] ? 
-                    <div className='flex-h agen-sec'>
-                        <div className='left sep horaires'>
-                            <HorairesForm datadispos={newdatadispo && newdatadispo != [{ id: 0, jour: '0', debut: '0', fin: '0', periode: '0' }] ? newdatadispo : dispos} newdispo={handleNewHoraires} idDispo={idDispo} />
-                        </div>
-                        <div className='right'>
-                            <Calendrier dispos={newdatadispo && activeItem === 'dispo' ? newdatadispo : dispos} rdvs={filteredRdvs} arrets={arrets} chargement={() => setChargementCal(false)} selectedDates={dates} disposdisp={activeItem === 'dispo' ? true : false} />
-                        </div>
-                    </div> :
-                    <Loader></Loader>
-                     
+                    dispos && dispos[0] ?
+                        <div className='flex-h agen-sec'>
+                            <div className='left sep horaires'>
+                                <HorairesForm datadispos={newdatadispo && newdatadispo != [{ id: 0, jour: '0', debut: '0', fin: '0', periode: '0' }] ? newdatadispo : dispos} newdispo={handleNewHoraires} idDispo={idDispo} />
+                            </div>
+                            <div className='right'>
+                                <Calendrier dispos={newdatadispo && activeItem === 'dispo' ? newdatadispo : dispos} rdvs={[]} arrets={[]} chargement={() => setChargementCal(false)} selectedDates={dates} disposdisp={activeItem === 'dispo' ? true : false} />
+                            </div>
+                        </div> :
+                        <Loader></Loader>
+
                 )}
             </div>
 

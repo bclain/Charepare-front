@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await makeRequest({
                 method: 'POST',
-                url: '/logingarage',
+                url: '/loginuser',
                 data: {
                     email: email,
                     password: password,

@@ -224,7 +224,7 @@ const Calendrier = ({ dispos, rdvs, selectedDates, disposdisp, arrets, chargemen
                     sousDiv =
                         <div className="case-rdv " style={{ height: hauteurDiv }}>
                             <a className='fin' href="#">
-                                <p>{rdv.prenom}</p>
+                                <p>{rdv.voiture}</p>
 
                             </a>
                         </div>

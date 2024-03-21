@@ -13,7 +13,7 @@ import useFetch from '../../hooks/useFetch';
 const Activite = () => {
     const { userId } = useAuth();
     const [sendSubmit, setSendSubmit] = useState(true);
-    const { data, loading, error } = useFetch(`/prestataire-pages/?filters[Pro][$eq]=${userId}&populate=*`, 'GET', null, true, sendSubmit);
+    const { data, loading, error } = useFetch(`/pageGarages/1`, 'GET', null, true, sendSubmit);
     const [activeItem, setActiveItem] = useState('prestations');
     const [actualData, setActualData] = useState(null);
     const [newActiveItem, setNewActiveItem] = useState(null);

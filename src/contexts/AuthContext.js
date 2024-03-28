@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [userRole, setUserRole] = useState(null); // Initialisation à partir de localStorage
     const [userId, setUserId] = useState(null); // Initialisation à partir de localStorage
     const [userLoc, setUserLoc] = useState(null); // Initialisation à partir de localStorage
+    const [userInfo, setUserInfo] = useState(null); 
 
 
     const getRole = async (id) => {
@@ -35,27 +36,53 @@ export const AuthProvider = ({ children }) => {
             const response = await makeRequest({
                 method: 'POST',
                 url: '/loginuser',
-                data: {
+                data: { 
                     email: email,
                     password: password,
                 },
             });
             const data = response.data;
-            console.log(data.token);
+            
+            console.log(data);
+
+                
             if (data.token) {
+                setUserRole("user");
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('userId', data.user.id);
                 console.log(data.user.id)
                 setAuthToken(data.token);
                 setUserId(data.user.id);
-                setUserLoc(data.adresse);
-                getRole(data.user.id);
+                setUserInfo(data.user);
             } else {
                 throw new Error('Échec de la connexion');
+                
             }
         } catch (error) {
-            console.error('Erreur de connexion:', error);
-            throw error;
+            try {
+                const response = await makeRequest({
+                    method: 'POST',
+                    url: '/logingarage',
+                    data: {
+                        email: email,
+                        password: password,
+                    },
+                }); 
+                const data = response.data;
+
+                if ( data.token) {
+                    setUserRole("pro");
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userId', data.user.id);
+                    console.log(data.user.id)
+                    setAuthToken(data.token); 
+                    setUserInfo(data.user);
+                    setUserId(data.user.id);
+                }
+            }
+            catch (error) {
+                console.error('Erreur de connexion:', error);
+            }
         }
     };
 
@@ -139,11 +166,14 @@ export const AuthProvider = ({ children }) => {
         return userLoc;
     };
 
-    
+        
+    const getUserInfo = () => {
+        return userInfo;
+    };
 
 
     return (
-        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, register, isRole, userRole, userId, verifyToken, getUserLoc }}>
+        <AuthContext.Provider value={{ authToken, isAuthenticated, login, logout, register, isRole, userRole, userId, userInfo, verifyToken, getUserLoc, getUserInfo }}>
             {children}
         </AuthContext.Provider>
     );

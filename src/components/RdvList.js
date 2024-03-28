@@ -100,6 +100,7 @@ const RdvList = ({ typeList, idpers }) => {
     //     //     setSendReload(true);
     //     // }
     // }, [modalnContent]);
+    
 
 
 useEffect(() => {
@@ -181,7 +182,7 @@ useEffect(() => {
                         <span />
                     </div>
                     {rdvs.map(rdv => (
-                        <RdvDisp key={rdv.id} onVisible={handleVisible} type={typeList === "client" ? typeList : "normal"} iopen={typeList === "client"} idrdv={rdv.id} onLoaded={(id) => handleRdvLoad(id)} />
+                        <RdvDisp key={rdv.id} onVisible={handleVisible} type={typeList === "client" ? typeList : "normal"} iopen={typeList === "client"} idrdv={rdv.id} bRdv={rdv} onLoaded={(id) => handleRdvLoad(id)} />
                     ))}
                 </div>
             ))}

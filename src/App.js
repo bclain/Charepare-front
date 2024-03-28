@@ -35,7 +35,7 @@ function App() {
 
         <Route exact path="/pro/accueil" element={<Accueilpro/>} />
         <Route exact path="/pro/agenda/:sousMenu" element={<Agenda/>} />
-        <Route exact path="/activite/:sousMenu" element={<Activite/>} />
+        <Route exact path="pro/activite/:sousMenu" element={<Activite/>} />
 
       </Routes>
     </Router>

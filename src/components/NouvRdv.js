@@ -10,33 +10,29 @@ import Loader from './Loader';
 import Switch from './Switch';
 import { useModal } from '../contexts/ModalContext';
 import LoginForm from './LoginForm';    // Import the `useAuth` hook   
-import RegisterForm from './RegisterForm'; 
+import RegisterForm from './RegisterForm';
 
-const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
+const NouvRdv = ({ idPro, horaires, presta: prestas, nresa, idpage }) => {
 
     const { isAuthenticated, userInfo, userId, getUserInfo } = useAuth();
 
     const [formState, setFormState] = useState({
-        date: '',
-        datefin: '',
-        user: '',
-        prestataire_page: '',
-        presta_choisies: [],
-        email: '',
-        nom: '',
-        prenom: '',
-        adresse: '',
-        telephone: '',
-        accepteConditions: false
+        id_PageGarage: '',
+        services: [], 
+        id_Statut: 2,
+        commentaire: 'rdv pris par le client sur le site web',
+        id_Voiture: 0,
+        notificationEnvoye:true
     });
     const { openModal, closeModal } = useModal();
 
-     const [currentStep, setCurrentStep] = useState(0)
-    const [resa, setResa] = useState(false); 
+    const [currentStep, setCurrentStep] = useState(0)
+    const [resa, setResa] = useState(false);
     const [idpresta, setIdpresta] = useState({});
     const [interval, setInterval] = useState(40);
     const [dureeRdv, setDureeRdv] = useState(10);
     const [submitData, setSubmitData] = useState(null);
+    const [listVoitures, setListVoitures] = useState([]);
     const [sendSubmit, setSendSubmit] = useState(false);
     const [sendLogin, setSendLogin] = useState(false);
     const [sendRegister, setSendRegister] = useState(false);
@@ -45,6 +41,7 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
     const stesps = ["Réservation", "Informations", "Confirmation"];
     const [prestationsSelectionnees, setPrestationsSelectionnees] = useState([]); // État pour les prestations sélectionnées
     const [errors, setErrors] = useState({});
+    const [selectedVoiture, setSelectedVoiture] = useState(0);
     const { data: nrdv, loading, error: nerror } = useFetch(`/rendezvous`, 'POST', submitData, true, sendSubmit);
     const switchItems = [
         { id: 'register', label: 'Inscription' },
@@ -53,8 +50,6 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
     const [activeSwItem, setActiveSwItem] = useState('register');
 
 
-
-    
     const ajouterPrestationSelectionnee = (prestationAjoutee) => {
         setResa(true);
         nresa(true);
@@ -74,20 +69,8 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
     };
 
     useEffect(() => {
-        if (userInfo) {
-            // Création d'un nouvel objet avec les données mises à jour
-            const updatedFormState = {
-                ...formState, // Conserve les valeurs existantes de formState
-                email: userInfo.email || '',
-                user: userInfo.id || '',
-                nom: userInfo.nom || '',
-                prenom: userInfo.prenom || '',
-                adresse: userInfo.adresse ? userInfo.adresse.value : '',
-                telephone: userInfo.telephone || '',
-                // Ajoutez ici d'autres champs si nécessaire
-            };
-            // Mise à jour de l'état formState avec le nouvel objet
-            setFormState(updatedFormState);
+        if (userInfo) { 
+            setListVoitures(userInfo.voitures);
         }
     }, [userInfo]);
 
@@ -101,7 +84,7 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
                 adresse: nrdv.adresse,
                 telephone: nrdv.telephone,
                 accepteConditions: false
-            }); 
+            });
             console.log(nrdv.horaires, "horaires");
             setCurrentStep(currentStep + 1);
             setSendSubmit(false);
@@ -147,7 +130,7 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
             setIdpresta(newIdPresta);
         }
     }, [prestationsSelectionnees]);
-// Le tableau vide indique que cet effet ne s'exécute qu'une fois, au montage du composant
+    // Le tableau vide indique que cet effet ne s'exécute qu'une fois, au montage du composant
 
     const reduirPrestationSelectionnee = (idPrestationASupprimer) => {
 
@@ -178,86 +161,39 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
             behavior: 'smooth',
         });
         if (selectedDate && currentStep === 0) {
-            formState.date = selectedDate.date
-            formState.datefin = selectedDate.datefin
-            formState.user = userId
-            formState.prestataire_page = idcoiffeur
-            formState.presta_choisies =  JSON.stringify(prestationsSelectionnees);
+            console.log(selectedDate);
+            formState.dateHeureDebut = selectedDate.date
+            formState.dateHeureFin = selectedDate.datefin
+            formState.id_PageGarage = idPro 
+            formState.services = JSON.stringify(prestationsSelectionnees);
             setCurrentStep(currentStep + 1);
             if (userInfo) {
                 // Création d'un nouvel objet avec les données mises à jour
                 const nusernfo = getUserInfo();
                 const updatedFormState = {
                     ...formState, // Conserve les valeurs existantes de formState
-                    email: userInfo.email || '',
-                    user: userInfo.id || '',
-                    nom: userInfo.nom || '',
-                    prenom: userInfo.prenom || '',
-                    adresse: userInfo.adresse ? userInfo.adresse.value : '',
-                    telephone: userInfo.telephone || '',
                     // Ajoutez ici d'autres champs si nécessaire
                 };
                 // Mise à jour de l'état formState avec le nouvel objet
-                setFormState(updatedFormState);}
+                setFormState(updatedFormState);
+            }
         }
         else if (currentStep === 1) {
             handleSubmit();
         }
-    };
+    }; 
 
 
-    const validateFields = () => {
-        let newErrors = {};
-        let isValid = true;
+    const handleVoitureClick = (voiture) => {
 
-        // Email validation et sanitation
-        if (!formState.email) {
-            newErrors.email = "L'email est requis.";
-            isValid = false;
-        } else if (!validator.isEmail(formState.email)) {
-            newErrors.email = "L'adresse email est invalide.";
-            isValid = false;
-        } else {
-            formState.email = validator.normalizeEmail(formState.email);
-        }
-
-
-        // Nom et Prénom sanitation (simple exemple, peut être étendu/adapté)
-        ['nom', 'prenom'].forEach(field => {
-            if (!formState[field]) {
-                newErrors[field] = `Le ${field} est requis.`;
-                isValid = false;
-            } else {
-                formState[field] = validator.escape(formState[field]);
-            }
+        setSelectedVoiture(voiture.id);
+        //met a jour le formulaire avec la voiture selectionnée
+        setFormState({
+            ...formState,
+            id_Voiture: voiture.id
         });
-
-        // Adresse sanitation
-        if (!formState.adresse) {
-            newErrors.adresse = "L'adresse est requise.";
-            isValid = false;
-        } else {
-            formState.adresse = formState.adresse.value;
-        }
-
-        // Téléphone validation
-        if (!formState.telephone) {
-            newErrors.telephone = "Le numéro de téléphone est requis.";
-            isValid = false;
-        } else if (!validator.isMobilePhone(formState.telephone, 'any', { strictMode: false })) {
-            newErrors.telephone = "Le numéro de téléphone est invalide.";
-            isValid = false;
-        }
-
-        // Conditions validation
-        if (!formState.accepteConditions) {
-            newErrors.accepteConditions = "Vous devez accepter les conditions générales.";
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
     };
+
 
     const sanitizeInput = (input) => {
         const sanitizedInput = DOMPurify.sanitize(input);
@@ -265,24 +201,19 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
     };
 
     const handleSubmit = () => {
-        if (validateFields()) {
-            const formData = new FormData();
-            const sanitizedFormState = {};
-            
+        if (isAuthenticated()) { 
+            // avant d'envoyer change le data dans prestation selectione du form pour titre
+            const newFormState = { ...formState };
+            // change l'attribut "data" des prestations selctionnées pour le titre
+            const services =JSON.stringify(  prestationsSelectionnees.map(prestation => {
+                return {
+                    ...prestation,
+                    titre: prestation.data
+                };
+            })); 
+            newFormState.services = services;
 
-
-
-            for (const key in formState) {
-                sanitizedFormState[key] = sanitizeInput(formState[key]);
-            }
-
-            
-            // Submit the form
-            formData.append('data', JSON.stringify(sanitizedFormState));
-            
-
-
-            setSubmitData(formData);
+            setSubmitData(newFormState);
             setSendSubmit(true);
         }
     };
@@ -433,121 +364,46 @@ const NouvRdv = ({idcoiffeur,  horaires, presta: prestas, nresa, idpage}) => {
                     <span />
                     <div className={currentStep === 0 ? "itemresa " : "itemresa small"}>
                         {horaires &&
-                            <DateSelect prestatairepage={idpage} horaires={horaires} interval={interval} dureeRdv={dureeRdv} result={(e) => setSelectedDate(e)} edit={currentStep === 0 ? true : false} >
+                            <DateSelect prestatairepage={idpage} horaires={horaires} interval={interval} dureeRdv={dureeRdv} result={(e) => setSelectedDate(e)} edit={currentStep === 0 ? true : false} trajet={10} >
                             </DateSelect>
                         }
                     </div>
                     <span />
-                    {currentStep === 1 && selectedDate &&(
-                        isAuthenticated() && formState.adresse !==""  ?
-                        <div className='form'>
-                            <h4>Confimez vos informations </h4>
-                            <AddressAuto err={errors.adresse ? errors.adresse : false} onAddressSelect={(address) => setFormState({ ...formState, adresse: address })} newSelect={formState.adresse} />
-                            <div className="form-group line">
-                                <label className='desc' htmlFor="prenom">Prénom</label>
-                                <input
-                                    type="text"
-                                    className="inputs"
-                                    name="prenom"
-                                    value={formState.prenom}
-                                    onChange={handleInputChange}
-                                    placeholder="Prénom"
-                                />
-                                {errors.prenom && <p className="error">{errors.prenom}</p>}
-                            </div>
-                            <div className="form-group line">
-                                <label className='desc' htmlFor="nom">Nom</label>
-                                <input
-                                    type="text"
-                                    className="inputs"
-                                    name="nom"
-                                    value={formState.nom}
-                                    onChange={handleInputChange}
-                                    placeholder="Nom"
-                                />
-                                {errors.nom && <p className="error">{errors.nom}</p>}
-                            </div>
-                            <div className="form-group line">
-                                <label className='desc' htmlFor="email">Adresse email</label>
-                                <input
-                                    type="email"
-                                    className="inputs"
-                                    name="email"
-                                    value={formState.email}
-                                    onChange={handleInputChange}
-                                    placeholder="Email"
-                                />
-                                {errors.email && <p className="error">{errors.email}</p>}
-                            </div>
-                            <div className="form-group line">
-                                <label className='desc' htmlFor="telephone">Numéro de téléphone</label>
-                                <input
-                                    type="tel"
-                                    className="inputs"
-                                    name="telephone"
-                                    value={formState.telephone}
-                                    onChange={handleInputChange}
-                                    placeholder="Numéro de téléphone"
-                                />
-                                {errors.telephone && <p className="error">{errors.telephone}</p>}
-                            </div>
-                            <div className="form-group check">
-                                <input
-                                    type="checkbox"
-                                    id="accepteConditions"
-                                    name="accepteConditions"
-                                    checked={formState.accepteConditions}
-                                    onChange={handleInputChange}
-                                />
-                                <label htmlFor="accepteConditions">J’accepte les Conditions générales de ByKaHomes*</label>
+                    {currentStep === 1 && selectedDate && (
+                        isAuthenticated() ?
+                            <div className='form'>
+                                <h4>Séléctionnez votre vehicule</h4>
+                               
+                                <div className="form-group  itemvoiture">
+                                    {listVoitures?.map((voiture, index) => (
+                                        voiture.marque && voiture.modele &&
+                                        <div key={index} className={`item ${selectedVoiture === voiture.id ? 'active' : ''}`} onClick={() => handleVoitureClick(voiture)}>
+                                            <p>{voiture.marque} - {voiture.modele}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                               
+                                {errors.accepteConditions && <p className="error">{errors.accepteConditions}</p>}
+                                <p>Paiement avec le professionnel en personne: carte de crédit, espèces.  *</p>
 
                             </div>
-                            {errors.accepteConditions && <p className="error">{errors.accepteConditions}</p>}
-                            <p>Paiement avec le professionnel en personne: carte de crédit, espèces.  *</p>
-
-                        </div>
-                        :
-                        <div className='connectsection form'>
-                            {isAuthenticated() ?  <h4>Confimez vos informations  {formState.adresse} </h4> : <h4>Connectez-vous ou inscrivez-vous pour continuer</h4>}
-                            <Switch items={switchItems} activeItem={activeSwItem} setActiveItem={(e) => setActiveSwItem(e)}></Switch>
-                     {activeSwItem == "login" ?  <LoginForm send={true} action={sendLogin}></LoginForm> 
-                     :
-                            <RegisterForm send={true} action={sendRegister}></RegisterForm>    }        
-                        </div>
+                            :
+                            <div className='connectsection form'>
+                                {isAuthenticated() ? <h4>Confimez vos informations  {formState.adresse} </h4> : <h4>Connectez-vous ou inscrivez-vous pour continuer</h4>}
+                                <Switch items={switchItems} activeItem={activeSwItem} setActiveItem={(e) => setActiveSwItem(e)}></Switch>
+                                {activeSwItem == "login" ? <LoginForm send={true} action={sendLogin}></LoginForm>
+                                    :
+                                    <RegisterForm send={true} action={sendRegister}></RegisterForm>}
+                            </div>
                     )}
-                    {currentStep === 2 && nrdv && formState.adresse !== ""  &&
-                        <div className='confirmation'>
-                            <div className="infos">
-                                <div className='grp '>
-                                    <p className='desc'>Nom:</p>
-                                    <p className='strong'>{formState.nom}</p>
-                                </div>
-                                <div className='grp'>
-                                    <p className='desc'>Prenom:</p>
-                                    <p className='strong'>{formState.prenom}</p>
-                                </div>
-                                <div className='grp  '>
-                                    <p className='desc'>Email:</p>
-                                    <p className='strong'>{formState.email}</p>
-                                </div>
-                                <div className='grp  '>
-                                    <p className='desc'>Téléphone:</p>
-                                    <p className='strong'>{formState.telephone}</p>
-                                </div>
-                            </div>
-                            <div className='grp'>
-                                <p className='desc'>Adresse:</p>
-                                <p className='strong'>{formState.adresse}</p>
-                            </div>
-                        </div>
-                    }
                     {currentStep === 2 ?
                         <button class="btn-base " onClick={() => retour()}><svg
                             viewBox="0 0 11 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.36555 0.0634767L6.31252 1.11651L6.31239 1.11637L3.47689 3.95187L3.47685 3.95183L0.276298 7.15238H0.218262L0.24728 7.1814L0.218295 7.21039H0.276266L3.07575 10.0099L3.07572 10.0099L4.5296 11.4638H4.52993L5.91158 12.8454L5.91154 12.8455L7.36541 14.2993L10.9745 14.2993L8.11701 11.4418L8.11705 11.4418L6.66317 9.98791H6.66284L5.28122 8.60629L5.28125 8.60626L3.85639 7.1814L4.7083 6.32949L4.70834 6.32953L7.71597 3.3219L7.7161 3.32203L10.9747 0.0634766L7.36555 0.0634767Z" fill="black"></path></svg>
                             <p>Retour</p>
                         </button>
                         :
-                        <btn class={ (currentStep === 0 && selectedDate )|| (currentStep === 1 && isAuthenticated() )? "btn-front spe" : "btn-front spe inactive"} onClick={handlesuivant}><span></span><p> {currentStep === 1 ? "Confirmer le rendez-vous" : "Continuer"}</p><div class="icon"> {loading ? <Loader type="button" ></Loader> : <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.8795 15.2253L4.96384 14.1724L4.9639 14.1724L7.88392 11.3369L7.88395 11.3369L11.1798 8.13634L11.2394 8.13634L11.2096 8.10744L11.2396 8.07835L11.1796 8.07835L8.29688 5.27897L8.29701 5.27885L6.79983 3.82497L6.79933 3.82497L5.37661 2.4434L5.37675 2.44328L3.87956 0.989401L0.162947 0.9894L3.10546 3.8468L3.10533 3.84693L4.60252 5.30081L4.60301 5.30081L6.02569 6.68233L6.02556 6.68246L7.49299 8.10744L6.61576 8.9593L6.61573 8.95927L3.51856 11.9669L3.5185 11.9668L0.162881 15.2253L3.8795 15.2253Z" fill="black"></path></svg>}</div></btn>
+                        <btn class={(currentStep === 0 && selectedDate) || (currentStep === 1 && isAuthenticated()) ? "btn-front spe" : "btn-front spe inactive"} onClick={handlesuivant}><span></span><p> {currentStep === 1 ? "Confirmer le rendez-vous" : "Continuer"}</p><div class="icon"> {loading ? <Loader type="button" ></Loader> : <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.8795 15.2253L4.96384 14.1724L4.9639 14.1724L7.88392 11.3369L7.88395 11.3369L11.1798 8.13634L11.2394 8.13634L11.2096 8.10744L11.2396 8.07835L11.1796 8.07835L8.29688 5.27897L8.29701 5.27885L6.79983 3.82497L6.79933 3.82497L5.37661 2.4434L5.37675 2.44328L3.87956 0.989401L0.162947 0.9894L3.10546 3.8468L3.10533 3.84693L4.60252 5.30081L4.60301 5.30081L6.02569 6.68233L6.02556 6.68246L7.49299 8.10744L6.61576 8.9593L6.61573 8.95927L3.51856 11.9669L3.5185 11.9668L0.162881 15.2253L3.8795 15.2253Z" fill="black"></path></svg>}</div></btn>
                     }
                 </div>
             }

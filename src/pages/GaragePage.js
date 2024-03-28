@@ -58,7 +58,7 @@ const GaragePage = () => {
                                 </div>
                             </div>
                             {pageData?.id && prestationsTriees && (
-                                <NouvRdv idcoiffeur={pageData?.id} horaires={pageData?.horaires} presta={prestationsTriees} idpage={pageData?.id} nresa={(e) => setResa(e)} >
+                                <NouvRdv idPro={pageData?.id} horaires={pageData?.horaires} presta={prestationsTriees} idpage={pageData?.id} nresa={(e) => setResa(e)} >
 
                                 </NouvRdv>
                             )}

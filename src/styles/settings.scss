@@ -356,7 +356,7 @@ section,
 
 .btn-simple {
   border: none;
-  background-color: $dark;
+  background-color: rgb(255, 255, 255);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -369,7 +369,7 @@ section,
   height: fit-content;
 
   p {
-    color: $white;
+    color: black;
     font-weight: 1000;
     font-size: 16px;
   }
@@ -639,6 +639,10 @@ section,
   justify-content: space-between;
 }
 
+button{
+  cursor: pointer;
+}
+
 
 .filtre {
   display: flex;
@@ -748,5 +752,40 @@ section,
         color: $dark;
       }
     }
+  }
+}
+
+.form-group.itemvoiture{
+  cursor: pointer;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: center;
+  .item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid $grey-border;
+    transition: 150ms ease-in-out; 
+    p{
+      font-size: 14px; 
+    }
+    &:hover{
+      background-color: $color-1;
+      color: white;
+      transition: 150ms ease-in-out;
+    }
+    img{
+      width: 50px;
+      height: 50px;
+    }
+  }
+  .active{
+    background-color: $color-1;
+    color: white;
   }
 }

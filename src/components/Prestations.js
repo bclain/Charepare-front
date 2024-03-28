@@ -11,7 +11,7 @@ const Prestations = ({ confirm, dataPage, newData }) => {
     const [sendSubmit, setSendSubmit] = useState(false);
     const [idPage, setIdPage] = useState(null);
 
-    const { data: soummission, loading, error } = useFetch(`/prestataire-pages/${idPage}`, 'Put', submitData, true, sendSubmit);
+    const { data: soummission, loading, error } = useFetch(`/pageGarages/${idPage}`, 'Put', submitData, true, sendSubmit);
 
 
     const sortedPrestations =  useState([]);

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { startOfWeek, addDays, format, getDay, parse, parseISO, isWithinInterval, addMinutes, isBefore, isAfter,isSameDay, format as formatTime } from 'date-fns';
+import { startOfWeek, addDays, format, getDay, parse, parseISO, isWithinInterval, addMinutes, isBefore, isAfter,isSameDay,formatISO, format as formatTime, set } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import useFetch from '../hooks/useFetch';
+import Loader from './Loader';
 
 const daysMapping = {
     '0': 'dim',
@@ -19,15 +21,14 @@ const periodMapping = {
 };
 
 
-const rendezVousData = [
-    { "id": 1, "debut": "2024-02-01T09:00:00", "fin": "2024-02-01T09:30:00", "description": "Consultation médicale" },
-    { "id": 2, "debut": "2024-02-06T10:00:00", "fin": "2024-02-06T10:30:00", "description": "Réunion d'équipe" },
-    { "id": 3, "debut": "2024-02-05T11:00:01", "fin": "2024-02-05T12:00:00", "description": "Entretien client" },
-    { "id": 4, "debut": "2024-02-06T14:00:00", "fin": "2024-02-06T14:45:00", "description": "Séance de coaching" },
-    { "id": 5, "debut": "2024-02-05T19:40:00", "fin": "2024-02-05T20:00:00", "description": "Séance de coaching" },
-    { "id": 6, "debut": "2024-02-12T05:00:00", "fin": "2024-02-06T22:45:00", "description": "Séance de coaching" },
-];
 
+
+function adjustTimeToDate(dateTimeISO, time) {
+    const date = parseISO(dateTimeISO); // Convertir la date ISO en objet Date
+    const [hours, minutes] = time.split(':').map(Number);
+    date.setHours(hours, minutes, 0, 0); // Ajuster les heures et les minutes sur la date de l'objet Date
+    return date;
+}
 
 function parseTime(time, referenceDate = new Date()) {
     const [hours, minutes] = time.split(':').map(Number);
@@ -35,23 +36,32 @@ function parseTime(time, referenceDate = new Date()) {
     return date;
 }
 
-function generateTimeSlots(debut, fin, rendezVousData, interval, dureee ) {
+function generateTimeSlots(debut, fin, rendezVousData, interval, dureee, trajet ) {
+    const ntrajet = Math.ceil(trajet / 5) * 5;
     let slots = [];
-    let startTime = parseTime(debut);
-    let endTime = parseTime(fin);
-
-    // Adapter la fonction parseTime pour qu'elle accepte une date ISO et extraire seulement l'heure et les minutes
-    function parseTimeISO(dateTime) {
-        const time = dateTime.split('T')[1].substring(0, 5); // Extrait HH:mm de la date ISO
-        return parseTime(time);
+    let startTime ; 
+    let endTime ;
+    console.log( "trajet", ntrajet)
+    console.log("rdv", rendezVousData);
+    if(rendezVousData[0] &&  rendezVousData[0].debut) {
+        console.log("oui");
+        const referenceDateISO = rendezVousData[0].debut.split('T')[0]; // Extraire seulement la date YYYY-MM-DD
+         startTime = adjustTimeToDate(referenceDateISO + 'T' + debut + ':00.000Z', debut);
+         endTime = adjustTimeToDate(referenceDateISO + 'T' + fin + ':00.000Z', fin);
     }
-
-    // Convertir les heures de début et de fin des rendez-vous en objets Date en utilisant la fonction adaptée
+    else{
+         startTime = parseTime(debut);
+         endTime = parseTime(fin);
+    }
+    
     rendezVousData = rendezVousData.map(rdv => ({
         ...rdv,
-        debut: parseTimeISO(rdv.debut),
-        fin: parseTimeISO(rdv.fin),
+        debut: parseISO(rdv.debut),
+        fin: parseISO(rdv.fin),
     }));
+
+
+    //console.log(rendezVousData, debut, fin, interval, dureee, startTime, endTime);
 
     while (isBefore(startTime, endTime)) {
         let endSlotTime = addMinutes(startTime, dureee);
@@ -64,7 +74,7 @@ function generateTimeSlots(debut, fin, rendezVousData, interval, dureee ) {
                 slotIsFree = false;
                 // Ajuster startTime pour le positionner juste après la fin du rdv si cela est plus tard que l'actuel startTime + interval
                 if (isAfter(rdv.fin, startTime)) {
-                    startTime = rdv.fin; // Mettre à jour startTime pour reprendre après la fin du rdv
+                    startTime = addMinutes(rdv.fin, ntrajet); // Mettre à jour startTime pour reprendre après la fin du rdv
                 }
                 break; // Sortir de la boucle car le créneau actuel n'est pas libre
             }
@@ -78,13 +88,14 @@ function generateTimeSlots(debut, fin, rendezVousData, interval, dureee ) {
         }
     }
 
+    
     return slots;
 }
 
 
 
 
-const groupScheduleByDay = (data, rendezVous, specificDay, selectedDayShortFormat, interval,dureeRdv) => {
+const groupScheduleByDay = (data, rendezVous, specificDay, selectedDayShortFormat, interval,dureeRdv, trajet) => {
     // Conversion de specificDay en format YYYY-MM-DD si ce n'est pas déjà le cas
     const specificDayFormatted = new Date(specificDay).toISOString().split('T')[0];
 
@@ -109,18 +120,25 @@ const groupScheduleByDay = (data, rendezVous, specificDay, selectedDayShortForma
 
         acc[jour] = acc[jour] || { am: [], pm: [], night: [] };
         // Utilisation des rendezVous filtrés pour générer les créneaux
-        acc[jour][periode] = acc[jour][periode].concat(generateTimeSlots(debut, fin, filteredRendezVous, interval,dureeRdv));
-
+        acc[jour][periode] = acc[jour][periode].concat(generateTimeSlots(debut, fin, filteredRendezVous, interval,dureeRdv, trajet));
+        console.log("slots", specificDay , jour , acc[jour][periode]);
         return acc;
     }, {});
     return groupedData;
 };
 
 
-const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
-    const today = new Date();
-    const [rendezVous, setRendezVous] = useState(rendezVousData);
 
+const DateSelect = ({ horaires, interval,dureeRdv, result, edit, prestatairepage,trajet}) => {
+
+
+
+
+    const today = new Date();
+   const [dataSend, setDataSend] = useState(true);
+
+    const [rendezVous, setRendezVous] = useState([]);
+    const [loading, setLoading] = useState(true);
     const yesterday = addDays(today, -1);
     const [selectedDate, setSelectedDate] = useState(today);
     const [selectedTime, setSelectedTime] = useState(null);
@@ -129,17 +147,24 @@ const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
     const [dateDisp , setDateDisp] = useState("")
     const [firstDate, setFirstDate] = useState(null);
     const [actualfirstDate, setActualfirstDate] = useState(null);
+    const [startDay, setStartDay] = useState(today.toISOString());
+    const endDayCalc = new Date();
+    endDayCalc.setDate(today.getDate() + 15); // Ajoute 14 jours à la date actuelle
+    const [endDay, setEndDay] = useState(endDayCalc.toISOString());    
+    const { data: rdvsdata, loading: rdvsloading } = useFetch(`/rendezvous/confirme`, 'GET', null, true, dataSend);    
     
-
 
     // Ajout de cette fonction pour initialiser ou mettre à jour weekDaysInfo
     const updateWeekDaysInfo = (date) => {
+        
+    console.log( "trajet", trajet)
         const startOfSelectedWeek = startOfWeek(date, { weekStartsOn: 1 });
+
         const newWeekDaysInfo = Array.from({ length: 7 }).map((_, index) => {
             const day = addDays(startOfSelectedWeek, index);
             const dayShortFormat = format(day, 'EEE', { locale: fr }).toLowerCase().replace('.', '');
             // Utilisation de groupScheduleByDay2 pour obtenir les horaires groupés pour ce jour spécifique
-            const groupedSchedule = groupScheduleByDay(horaires, rendezVous, day, dayShortFormat, interval,dureeRdv);
+            const groupedSchedule = groupScheduleByDay(horaires, rendezVous, day, dayShortFormat, interval,dureeRdv,trajet);
             // Vérifier si des plages horaires sont disponibles pour ce jour
             const hasAvailability = groupedSchedule[dayShortFormat] && 
             Object.values(groupedSchedule[dayShortFormat]).some(period => period.length > 0) &&
@@ -159,16 +184,16 @@ const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
             // Si aucune disponibilité, définir la semaine suivante comme la nouvelle semaine sélectionnée
             
             const startOfNextWeek = addDays(startOfSelectedWeek, 7);
-            updateWeekDaysInfo(startOfNextWeek); // Appel récursif avec la date de début de la semaine suivante
+            if(rdvsdata) updateWeekDaysInfo(startOfNextWeek) // Appel récursif avec la date de début de la semaine suivante
         } else {
             // Si au moins un jour est disponible, mettre à jour l'état avec les informations de la semaine actuelle
             setWeekDaysInfo(newWeekDaysInfo);
             // Optionnel : Mettre à jour la date sélectionnée sur le premier jour disponible de la semaine
             const firstAvailableDay = newWeekDaysInfo.find(dayInfo => dayInfo.hasAvailability)?.date;
-            setActualfirstDate(firstAvailableDay);
+            setActualfirstDate(firstAvailableDay); 
             if (firstAvailableDay) {
                 setSelectedDate(null);
-                result(null);
+                result(null); 
                 if(!firstDate)
                     setFirstDate(firstAvailableDay);
                 else isSameDay(firstDate, firstAvailableDay) ? setIsCurrentOrFutureWeek(true) : setIsCurrentOrFutureWeek(false);
@@ -176,16 +201,32 @@ const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { 
         // Initialiser weekDaysInfo lors du chargement du composant
-        updateWeekDaysInfo(selectedDate ? selectedDate : actualfirstDate);
-        console.log(dureeRdv);
-    }, [dureeRdv]); // Le tableau vide indique que cet effet ne s'exécute qu'une fois, au montage du composant
+        if(rdvsdata){ 
+            console.log("dataaaaa" , rdvsdata);
+            updateWeekDaysInfo(selectedDate ? selectedDate : actualfirstDate)} ;
+        console.log("dataaaaa" , rdvsdata);
+    }, [dureeRdv,rendezVous]); // Le tableau vide indique que cet effet ne s'exécute qu'une fois, au montage du composant
+
+    useEffect(() => {
+        if(rdvsdata){
+            const formattedRdvs = rdvsdata.data.map(rdv => ({
+                id: rdv.id,
+                debut: rdv.date,
+                fin: rdv.datefin,
+                // La description est omise car vous avez mentionné de ne pas l'inclure
+            }));
+    
+            setRendezVous(formattedRdvs);
+            setDataSend(false);
+        } 
+    }, [rdvsdata]); // Le tableau vide indique que cet effet ne s'exécute qu'une fois, au montage du composant
 
     const changeWeek = (offset) => {
         // Calculer la nouvelle date sélectionnée avec l'offset
         const newSelectedDate = addDays(actualfirstDate, 7 * offset);
-    
+     
         // Trouver le début de la semaine pour la date sélectionnée et le début de la semaine actuelle
         const startOfNewWeek = startOfWeek(newSelectedDate, { weekStartsOn: 1 });
         const startOfCurrentWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -194,7 +235,7 @@ const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
         if (startOfNewWeek >= startOfCurrentWeek) {
             // Si la nouvelle semaine est la même que la semaine actuelle ou une future, permettre la mise à jour
             setSelectedDate(newSelectedDate);setSelectedTime(null) ; result(null);
-            updateWeekDaysInfo(newSelectedDate); // Assurez-vous que cette fonction met à jour correctement weekDaysInfo pour la nouvelle semaine
+            if(rdvsdata) updateWeekDaysInfo(newSelectedDate); // Assurez-vous que cette fonction met à jour correctement weekDaysInfo pour la nouvelle semaine
         } else {
             // Sinon, ne rien faire ou afficher un message d'erreur si nécessaire
             console.log("Impossible de charger une semaine avant la semaine actuelle.");
@@ -234,21 +275,30 @@ const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
         const formattedEndTime = format(endTime, "HH'h'mm", { locale: fr });
         
         setDateDisp(` ${formattedDate} - ${formattedStartTime} - ${formattedEndTime}`);
-        
-        result([  day.formatted, time]);
-        
+        // Utiliser formatISO pour formatter les dates au format ISO 8601
+        const formattedStartDate = formatISO(startTime);
+        const formattedEndDate = formatISO(endTime);
+
+        // Supposant que `result` est une fonction de callback où vous voulez envoyer les résultats formatés
+        result({
+            date: formattedStartDate,
+            datefin: formattedEndDate,
+        });
     };
 
 
     return (
         <div className="dateSelect">
         <h4>Date et heure</h4>
-            <div className="title">
+        {!rdvsdata ? <Loader></Loader> :
+            <div className="dateSelect">
+            <div className="title"> 
                 <span className='verti'></span>
                 <p className='desc'>Sélectionné: </p>
                 {selectedDate && 
                 <p>{dateDisp}</p> }
             </div>
+            {edit && 
             <div className="week-days">
                 <button  className={`btn-base ${isCurrentOrFutureWeek ? 'disabled' : ''}`}  onClick={() => changeWeek(-1)}><svg width="11" height="15" viewBox="0 0 11 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M7.36555 0.0634767L6.31252 1.11651L6.31239 1.11637L3.47689 3.95187L3.47685 3.95183L0.276298 7.15238H0.218262L0.24728 7.1814L0.218295 7.21039H0.276266L3.07575 10.0099L3.07572 10.0099L4.5296 11.4638H4.52993L5.91158 12.8454L5.91154 12.8455L7.36541 14.2993L10.9745 14.2993L8.11701 11.4418L8.11705 11.4418L6.66317 9.98791H6.66284L5.28122 8.60629L5.28125 8.60626L3.85639 7.1814L4.7083 6.32949L4.70834 6.32953L7.71597 3.3219L7.7161 3.32203L10.9747 0.0634766L7.36555 0.0634767Z" fill="#006963" />
@@ -263,15 +313,15 @@ const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
                         onClick={() => day.hasAvailability && !isBefore(day.date, today) && handleDateSelection(day)}>
                         <p>{day.sday}</p>
                         <h5>{day.formatted}</h5>
-                    </div>
+                    </div> 
                 ))}
                 <button className='btn-base' onClick={() => changeWeek(1)}>
                     <svg width="11" height="15" viewBox="0 0 11 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M3.82732 14.2993L4.88035 13.2463L4.88049 13.2464L7.71598 10.4109L7.71602 10.411L10.9166 7.21041L10.9746 7.21041L10.9456 7.18139L10.9746 7.1524L10.9166 7.1524L8.11712 4.35292L8.11715 4.35289L6.66327 2.89902L6.66294 2.89902L5.28129 1.51736L5.28133 1.51732L3.82746 0.0634448L0.218347 0.063446L3.07586 2.92096L3.07582 2.921L4.5297 4.37488L4.53003 4.37488L5.91165 5.7565L5.91162 5.75653L7.33648 7.18139L6.48457 8.0333L6.48453 8.03326L3.4769 11.0409L3.47677 11.0408L0.218213 14.2993L3.82732 14.2993Z" fill="#006963" />
                     </svg>
                 </button>
-            </div>
-            {selectedDate && groupedScheduleForSpecificDay && groupedScheduleForSpecificDay[daysMapping[getDay(selectedDate)]] && (
+            </div>}
+            {edit && selectedDate && groupedScheduleForSpecificDay && groupedScheduleForSpecificDay[daysMapping[getDay(selectedDate)]] && rdvsdata && (
                 <div className="time-slots">
                     {/* Ici, adaptez l'affichage en fonction de la période de la journée (matin, après-midi, soir) */}
                     {Object.entries(groupedScheduleForSpecificDay[daysMapping[getDay(selectedDate)]]).map(([periode, times]) => (
@@ -290,9 +340,9 @@ const DateSelect = ({ horaires, interval,dureeRdv, result }) => {
                     ))}
 
                 </div>
-            )}
+            )} </div>}
         </div>
     );
 };
 
-export default DateSelect;
+export default DateSelect; 

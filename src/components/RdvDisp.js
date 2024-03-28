@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import Facture from './Facture';
 import { format, parseISO, set } from 'date-fns';
+import { useModal } from '../contexts/ModalContext';
 registerLocale('fr', fr);
 
 
@@ -51,10 +52,18 @@ const prestationsCoiffeur = [
 
 const RdvDisp = ({ type, iopen, idrdv, bRdv }) => {
     const [sendSubmitRdv, setSendSubmitRdv] = useState(false);
-    const confirmbody = [{ confirm: 'true' }];
+    const terminbody = [{id_Statut : 4}];
     const [sendConfirm, setSendConfirm] = useState(false);
+    const [sendAnnul, setSendAnnul] = useState(false);
+    const [sendNotif, setSendNotif] = useState(false);
+    const [sendTermin, setSendTermin] = useState(false);
     const { data: rdvsdata, loading: rdvsloading, error } = useFetch(`/rendezvous/${idrdv}`, 'GET', null, true, sendSubmitRdv);
-    const { data: nConfirm, loading: lConfirm, error: eComfirm } = useFetch(`/rendezvous/${idrdv}`, 'PUT', confirmbody, true, sendConfirm);
+    const { data: nConfirm, loading: lConfirm, error: eComfirm } = useFetch(`/rendezvous/confirmer/${idrdv}`, 'PATCH', null, true, sendConfirm);
+    const { data: nTermin, loading: lTermin, error: eTermin } = useFetch(`/rendezvous/update/${idrdv}`, 'PATCH', terminbody , true, sendTermin);
+    const { data: nNotify, loading: lNotify, error: eNotify } = useFetch(`/rendezvous/${idrdv}`, 'PATCH', terminbody , true, sendNotif);
+    const { data: nAnnul, loading: lAnnul, error: eAnnul } = useFetch(`/rendezvous/${idrdv}`, 'delete', terminbody , true, sendAnnul);
+    
+    const { openModalWrdv, reload, modalnContent } = useModal();
 
     let className = "rdvdisp " + type;
 
@@ -70,14 +79,38 @@ const RdvDisp = ({ type, iopen, idrdv, bRdv }) => {
 
     useEffect(() => {
         if (idrdv) {
-            console.log("idrdv", idrdv);
             setSendSubmitRdv(true);
         }
-        else if (bRdv) {
+        if (bRdv) {
             console.log("bRdv", bRdv);
             setRdv(bRdv);
         }
     }, [idrdv, bRdv]);
+
+    useEffect(() => {
+        if (!modalnContent) return;
+        console.log("modalnContent", modalnContent);
+        const { id, action } = modalnContent;
+        if (action === 'confirm' && rdv && id === rdv.id) {
+            setEtat('confirm')
+        }
+        else if (action === 'termine' && rdv && id === rdv.id) {
+            setEtat('Terminé')
+        }
+    }, [modalnContent]);
+
+    useEffect(() => {
+
+        if ( nTermin ) {
+            reload(idrdv, 'termine');
+        }
+        if (nConfirm ) {
+            reload(idrdv, 'confirm');
+        }
+        if(nAnnul){
+            reload(idrdv, 'cancel');
+        }
+    }, [nConfirm, nTermin, nAnnul]);
 
     useEffect(() => {
         if (rdvsdata && rdvsdata.data && rdvsdata.data.dateHeureDebut) {
@@ -115,7 +148,7 @@ const RdvDisp = ({ type, iopen, idrdv, bRdv }) => {
     }, [rdvsdata]);
 
     return (
-        <div className={rdv && rdv.id_Statut != 2 ? className : className + " aconfirm"}>
+        <div className={rdv && etat != "aconfirmer" ? className : className + " aconfirm"}>
             {rdv && rdv.id != idrdv ?
                 <div>
                     <p className='nouv'></p>
@@ -239,13 +272,12 @@ const RdvDisp = ({ type, iopen, idrdv, bRdv }) => {
                             </div>
                             { etat === "aconfirmer" &&
                                 <div className="actions">
-                                    <a href="confirm " className='btn-simple danger'> <p>Annuler</p> </a>
-                                    <a href="confirm" className='btn-simple confirrm'> <p>Confirmer</p> </a>
+                                    <button className='btn-simple danger' onClick={()=>setSendAnnul(true)}> <p>Annuler</p> </button>
+                                    <button className='btn-simple confirrm' onClick={()=>setSendConfirm(true)}> <p>Confirmer</p> </button>
                                 </div>}
                             { etat === "confirm" &&
                                 <div className="actions">
-                                    <a href="confirm " className='btn-simple danger'> <p>Annuler</p> </a>
-                                    <a href="confirm" className='btn-simple confirrm'> <p>Confirmer</p> </a>
+                                   <button className='btn-simple danger' onClick={()=>setSendAnnul(true)}> <p>Annuler</p> </button>
                                 </div>}
 
                             <div className="actions">
@@ -259,9 +291,9 @@ const RdvDisp = ({ type, iopen, idrdv, bRdv }) => {
                             </div>
                             { etat === "En cours" &&
                                 <div className="actionplus">
-                                    <a href="confirm" className='btn-simple'> <p>Appeler le client</p> </a>
-                                    <a href="confirm" className='btn-simple'> <p>Rendez-vous bientôt terminé</p> </a>
-                                    <a href="confirm" className='btn-simple'> <p>Rendez-vous terminé</p> </a>
+                                    <button href="tel: {rdv.voiture.client.telephone}" className='btn-simple'> <p>Appeler le client</p> </button>
+                                    <button href="confirm" className='btn-simple'> <p>Rendez-vous bientôt terminé</p> </button>
+                                    <button href="confirm" className='btn-simple' onClick={()=>setSendConfirm(true)}> <p>Rendez-vous terminé</p> </button>
                                 </div>
                             }
                         </div> </div>

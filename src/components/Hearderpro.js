@@ -16,9 +16,9 @@ const Hearderpro = ({ titre }) => {
             <a className='btn-pro' href="">
                 <p> + Nouvel évênement</p>
             </a>
-            <btn className='btn-base' onClick={logout}>
+            <button className='btn-base' onClick={logout}>
                 <p>Deconnexion</p>
-            </btn>
+            </button>
         </div>
     );
 };

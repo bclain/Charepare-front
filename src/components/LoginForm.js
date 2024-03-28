@@ -29,11 +29,13 @@ const LoginForm = ({ send, action }) => {
     };
 
     useEffect(() => {
+        console.log("yoo" , userRole, isAuthenticated());
         if (isAuthenticated()) {
             closeModal();
         }
         if (isAuthenticated() && userRole == "pro") {
             navigate(`/pro/accueil`);
+            closeModal();
         }
     }, [userRole, closeModal]);
 
